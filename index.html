@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How my vault turns inputs into permanent assets</title>
+<style>
+:root{
+  --bg:#0d1117; --card:#161b22; --card2:#1c2330; --line:#2a3340;
+  --text:#c9d1d9; --dim:#8b949e; --faint:#6e7681;
+  --accent:#5fb49c; --accent2:#6aa9ff; --warn:#e3b341; --down:#f0816a; --plan:#a98bdc;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  line-height:1.6;font-size:16px}
+.wrap{max-width:920px;margin:0 auto;padding:0 22px}
+header.hero{padding:64px 0 40px;border-bottom:1px solid var(--line)}
+.kicker{color:var(--accent);font-weight:600;letter-spacing:.04em;text-transform:uppercase;font-size:13px}
+h1{font-size:38px;line-height:1.15;margin:14px 0 16px}
+.lede{font-size:19px;color:var(--dim);max-width:680px}
+.byline{margin-top:18px;color:var(--faint);font-size:14px}
+section{padding:46px 0;border-bottom:1px solid var(--line)}
+h2{font-size:26px;margin:0 0 6px}
+.sub{color:var(--dim);margin:0 0 22px;font-size:15px}
+h3{font-size:18px;margin:26px 0 8px}
+p{margin:10px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:680px){.g2,.g3{grid-template-columns:1fr}h1{font-size:30px}}
+code{background:#0b0f14;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px;color:#b8c7d9}
+.pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  padding:3px 9px;border-radius:20px;vertical-align:middle;margin-left:8px}
+.live{background:rgba(95,180,156,.16);color:var(--accent);border:1px solid rgba(95,180,156,.4)}
+.partial{background:rgba(227,179,65,.14);color:var(--warn);border:1px solid rgba(227,179,65,.4)}
+.planned{background:rgba(169,139,220,.14);color:var(--plan);border:1px solid rgba(169,139,220,.4)}
+.down{background:rgba(240,129,106,.14);color:var(--down);border:1px solid rgba(240,129,106,.4)}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:18px 0}
+.step{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;flex:1;min-width:120px}
+.step .n{color:var(--accent);font-weight:700;font-size:12px}
+.step .t{font-weight:600;margin-top:2px}
+.step .d{color:var(--dim);font-size:13px;margin-top:4px}
+.arrow{align-self:center;color:var(--faint);font-size:22px;padding:0 8px}
+.fan{display:grid;grid-template-columns:1fr;gap:12px}
+.fanrow{display:grid;grid-template-columns:200px 30px 1fr;align-items:center;gap:8px}
+@media(max-width:680px){.fanrow{grid-template-columns:1fr}}
+.dest{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:10px 13px}
+.dest b{color:var(--text)} .dest span{color:var(--dim);font-size:13px}
+.src{background:rgba(106,169,255,.1);border:1px solid rgba(106,169,255,.4);border-radius:9px;padding:12px 14px;font-weight:600}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+.muted{color:var(--dim)}
+ul{margin:8px 0;padding-left:20px} li{margin:5px 0}
+.note{border-left:3px solid var(--accent);padding:6px 0 6px 16px;color:var(--dim);margin:14px 0}
+footer{padding:40px 0 70px;color:var(--faint);font-size:14px}
+.tag{display:inline-block;background:#0b0f14;border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:12px;color:var(--accent);margin:2px 3px 2px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">My knowledge system</div>
+  <h1>How my vault turns inputs into permanent assets</h1>
+  <p class="lede">Recordings, links, lectures and meetings come in. A small amount of automation files each one by <b>metadata</b>, not folders, and saved queries do the cross-referencing forever. This is the target design, with honest badges for what's actually running today.</p>
+  <p class="byline">Living document &middot; built with Claude &middot; status as of late May 2026</p>
+  <div class="legend">
+    <span class="pill live">Live</span>
+    <span class="pill partial">Partial</span>
+    <span class="pill planned">Planned</span>
+    <span class="pill down">Down</span>
+  </div>
+</header>
+
+<section>
+  <h2>The one idea</h2>
+  <p class="sub">Borrowed from Freddie's system, adapted to my vault.</p>
+  <div class="card">
+    <p style="font-size:18px;margin:0"><b>Don't file into folders. File into metadata, and let a saved query do the cross-referencing.</b></p>
+  </div>
+  <p>Folders force one note into one place, so a conversation that touches three projects has to pick a home and the tree fights you. Metadata and links don't have that problem: a note can belong to everything at once, surfaced wherever it's relevant. Capture stays brainless so it never becomes a chore; all the intelligence happens later, in the vault, where I control it.</p>
+  <div class="grid g3">
+    <div class="card"><h3 style="margin-top:0">Capture is cheap</h3><p class="muted" style="font-size:14px;margin:0">Record or share with zero decisions. No categorising in the moment.</p></div>
+    <div class="card"><h3 style="margin-top:0">Vault does the work</h3><p class="muted" style="font-size:14px;margin:0">Enrichment, tagging and routing happen on my side, not at capture.</p></div>
+    <div class="card"><h3 style="margin-top:0">Queries draw the map</h3><p class="muted" style="font-size:14px;margin:0">Tag well once; dashboards and related-notes rebuild themselves.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>How the whole vault is structured</h2>
+  <p class="sub">Folders where structure is load-bearing; flat + metadata everywhere else.</p>
+  <div class="grid g2">
+    <div class="card">
+      <h3 style="margin-top:0">Stays in folders</h3>
+      <ul>
+        <li><b>INSEAD</b> &mdash; course &rarr; lecture &rarr; <code>Sources/L##/</code>. The lecture-note pipeline depends on this exact shape. Time-bounded: it freezes as an archive at graduation.</li>
+        <li><b>Projects</b> (startups) &mdash; a project is a folder.</li>
+        <li><b>_Setup / infrastructure</b> &mdash; templates, skills, config.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Flat + metadata</h3>
+      <ul>
+        <li><b>People</b> and <b>Inbox</b> &mdash; already flat databases driven by Bases. <span class="pill live">Live</span></li>
+        <li><b>Content Library</b> &mdash; one flat folder, classified by <code>content_format</code> + landing pages. <span class="pill live">Live</span></li>
+        <li><b>Meetings / talks</b> &mdash; the next thing to go flat. <span class="pill planned">Planned</span></li>
+        <li><b>Creative / Career</b> &mdash; flatten later, by metadata.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note">The hierarchy is a link graph, not a folder tree. Going forward, INSEAD is the one permanent exception; everything new is flat and metadata-first.</div>
+</section>
+
+<section>
+  <h2>Where one input actually ends up</h2>
+  <p class="sub">A single recording doesn't become one note &mdash; it scatters into the right places, and a query stitches them back together.</p>
+
+  <h3>A voice note <span class="pill partial">Partial</span></h3>
+  <div class="fan">
+    <div class="src">A 30-minute recording (Just Press Record)</div>
+    <div class="fanrow"><div class="dest"><b>Transcribe + enrich</b><br><span>AssemblyAI &rarr; Claude &rarr; review viewer</span> <span class="pill live">Live</span></div><div class="arrow">&rarr;</div>
+      <div class="dest"><b>Then it routes by type</b> <span class="pill planned">Planned</span><br><span>The vault classifies it &mdash; lecture or meeting &mdash; and files accordingly.</span></div></div>
+    <div class="fanrow"><div class="dest"><b>If lecture</b></div><div class="arrow">&rarr;</div><div class="dest"><span>Into <code>INSEAD/&lt;Course&gt;/Sources/L##/</code> + the lecture note, via lecture-note-processor.</span></div></div>
+    <div class="fanrow"><div class="dest"><b>If meeting / talk</b></div><div class="arrow">&rarr;</div><div class="dest"><span>A synthesis note (flat) + the raw transcript at the bottom + the <b>People</b> cards of attendees updated + relevant project notes.</span></div></div>
+    <div class="fanrow"><div class="dest"><b>then the query</b></div><div class="arrow">&rarr;</div><div class="dest"><span>Surfaces it next to every note sharing a <b>person</b>, <b>area</b> or <b>topic</b> &mdash; scored, ranked, automatic.</span></div></div>
+  </div>
+
+  <h3 style="margin-top:30px">A shared link <span class="pill down">Down</span></h3>
+  <div class="fan">
+    <div class="src">A URL or dropped PDF</div>
+    <div class="fanrow"><div class="dest"><b>Ingestion pipeline</b><br><span>fetch &rarr; enrich &rarr; evaluate</span></div><div class="arrow">&rarr;</div>
+      <div class="dest"><span>A fully-tagged note in <code>Content Library/Content/</code> with the verbatim source preserved at the bottom.</span></div></div>
+    <div class="fanrow"><div class="dest"><b>then</b></div><div class="arrow">&rarr;</div><div class="dest"><span>Appears on its channel landing page + any interest it touches, via Bases.</span></div></div>
+  </div>
+  <div class="note">Status: the ingestion pipeline is currently <b>down</b> on a missing dependency (<code>pymupdf4llm</code>), so links are filed by hand for now.</div>
+</section>
+
+<section>
+  <h2>The content system</h2>
+  <p class="sub">Third-party content I consume &rarr; a tagged, searchable library.</p>
+  <div class="flow">
+    <div class="step"><div class="n">1</div><div class="t">Capture</div><div class="d">Share a URL, drop a PDF, or the phone shortcut appends to a dropbox file.</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step"><div class="n">2</div><div class="t">Fetch</div><div class="d">A deterministic fetcher pulls the raw content (article, podcast, YouTube, etc.).</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step"><div class="n">3</div><div class="t">Enrich</div><div class="d">Claude writes summary, key points, tags, connections.</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step"><div class="n">4</div><div class="t">File</div><div class="d">A note in <code>Content Library/Content/</code>, verbatim source at the bottom.</div></div>
+  </div>
+  <table>
+    <tr><th>Piece</th><th>What it does</th><th>Status</th></tr>
+    <tr><td>Content Library + Bases dashboard</td><td>Flat folder, views by format / outlet / topic / channel</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td><code>/process-link</code></td><td>Process one URL now</td><td><span class="pill down">Down (dependency)</span></td></tr>
+    <tr><td><code>/triage-content</code></td><td>Scheduled sweep of the content inbox</td><td><span class="pill down">Down (dependency)</span></td></tr>
+    <tr><td>Monthly content scan</td><td>Proactively pulls new items from configured sources</td><td><span class="pill partial">Intermittent</span></td></tr>
+    <tr><td>Channel landing pages</td><td>Auto-created at 3+ items from an outlet</td><td><span class="pill live">Live</span></td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>The meeting-notes system</h2>
+  <p class="sub">The piece being built next. Dumb capture, all enrichment in the vault.</p>
+  <div class="flow">
+    <div class="step"><div class="n">1</div><div class="t">Record</div><div class="d">Just Press Record. No tags, no decisions.</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step"><div class="n">2</div><div class="t">Transcribe</div><div class="d">AssemblyAI + Claude &rarr; review viewer to glance &amp; correct.</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step"><div class="n">3</div><div class="t">Route</div><div class="d">Vault pass classifies lecture vs meeting and infers metadata.</div></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step"><div class="n">4</div><div class="t">File + surface</div><div class="d">Right folder, assets linked, transcript in body, on the dashboard.</div></div>
+  </div>
+  <table>
+    <tr><th>Piece</th><th>Status</th></tr>
+    <tr><td>Voice capture &rarr; transcript &rarr; review viewer &rarr; vault inbox</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td>Auto-routing (lecture vs meeting) + metadata inference</td><td><span class="pill planned">Planned</span></td></tr>
+    <tr><td>Flat meeting-notes folder + dashboard</td><td><span class="pill planned">Planned</span></td></tr>
+    <tr><td>People-card updates from each meeting</td><td><span class="pill planned">Planned</span></td></tr>
+  </table>
+  <div class="note">Built forward-compatible with the flat, metadata-first target so it never needs redoing when the rest of the vault flattens.</div>
+</section>
+
+<section>
+  <h2>How tagging works</h2>
+  <p class="sub">Three kinds of metadata, three different mechanisms. This is what makes the queries possible.</p>
+  <div class="grid g3">
+    <div class="card"><h3 style="margin-top:0">Entity &rarr; link</h3><p class="muted" style="font-size:14px">People, companies, concepts &mdash; things with their own note. Stored as <code>[[wikilinks]]</code>. Gives backlinks + graph + one canonical record.</p></div>
+    <div class="card"><h3 style="margin-top:0">Attribute &rarr; field</h3><p class="muted" style="font-size:14px">Date, type, status, area, interest, duration &mdash; values that describe the note. Stored as frontmatter fields. Sorted/filtered in Bases.</p></div>
+    <div class="card"><h3 style="margin-top:0">Keyword &rarr; tag</h3><p class="muted" style="font-size:14px">Genuine loose keywords + provenance (<code>voice-transcript</code>). Tags stop being the dumping ground for everything.</p></div>
+  </div>
+  <h3>The controlled vocabularies (closed lists, never free-form)</h3>
+  <p><b>Areas:</b>
+    <span class="tag">insead-classwork</span><span class="tag">insead-other</span><span class="tag">ai-workflow</span><span class="tag">startups</span><span class="tag">career</span><span class="tag">networking</span><span class="tag">personal-social</span><span class="tag">creative-ideas</span><span class="tag">other</span>
+  </p>
+  <p><b>Interests:</b> <span class="tag">ai</span><span class="tag">consciousness</span><span class="tag">rationality-cognitive-science</span><span class="tag">economics</span></p>
+  <div class="note">Rule of thumb: does this thing have its own note? Yes &rarr; link it. No, it describes the note &rarr; field. Only loose keywords &rarr; tag.</div>
+</section>
+
+<section>
+  <h2>What's running right now</h2>
+  <p class="sub">The honest status board.</p>
+  <table>
+    <tr><th>System</th><th>Status</th><th>Notes</th></tr>
+    <tr><td>Voice transcription pipeline</td><td><span class="pill live">Live</span></td><td>JPR &rarr; AssemblyAI &rarr; Claude &rarr; review viewer &rarr; vault inbox</td></tr>
+    <tr><td>Voice review viewer</td><td><span class="pill live">Live</span></td><td>Local web app to glance, edit speakers, approve</td></tr>
+    <tr><td>Content Library + dashboard</td><td><span class="pill live">Live</span></td><td>Flat, metadata-first, Bases views</td></tr>
+    <tr><td>Task system + daily triage</td><td><span class="pill live">Live</span></td><td>Capture &rarr; triage &rarr; surface</td></tr>
+    <tr><td>Canvas sync</td><td><span class="pill partial">Live (last run errored)</span></td><td>Pulls INSEAD materials daily</td></tr>
+    <tr><td>Content ingestion (<code>/process-link</code>, <code>/triage-content</code>)</td><td><span class="pill down">Down</span></td><td>Missing <code>pymupdf4llm</code> dependency</td></tr>
+    <tr><td>Meeting-notes routing</td><td><span class="pill planned">Planned</span></td><td>Designed; not yet built</td></tr>
+    <tr><td>Flat metadata redo (vault-wide)</td><td><span class="pill planned">Planned</span></td><td>Forward-compatible; applied to new content first, no mass migration</td></tr>
+  </table>
+</section>
+
+<footer>
+  <div class="wrap" style="padding:0">
+    A living map of how my vault works &mdash; capture cheap, enrich in the vault, let queries draw the connections. Updated as pieces come online.
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
