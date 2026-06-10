@@ -95,6 +95,22 @@ ul{margin:8px 0;padding-left:20px} li{margin:5px 0}
 .srcs{font-size:13px;color:var(--faint);margin-top:18px}
 .srcs code{font-size:12px}
 
+/* mermaid diagrams */
+.mermaid{background:#10141b;border:1px solid var(--line);border-radius:12px;padding:16px 10px;margin:10px 0 18px;overflow-x:auto;text-align:center}
+.mermaid svg{max-width:100%;height:auto}
+.dlegend{display:flex;gap:7px 14px;flex-wrap:wrap;align-items:center;margin:20px 0 8px;font-size:12px;color:var(--dim)}
+.dlegend .lt{text-transform:uppercase;letter-spacing:.04em;color:var(--faint);font-weight:600}
+.dlegend span.sw{display:inline-flex;align-items:center;gap:5px}
+.dlegend i{display:inline-block;width:11px;height:11px;border-radius:3px;border:1.5px solid}
+.dlegend i.j{background:#2e2512;border-color:#e3b341}
+.dlegend i.sc{background:#152238;border-color:#6aa9ff}
+.dlegend i.sk{background:#11261f;border-color:#5fb49c}
+.dlegend i.fi{background:#1a1f27;border-color:#8b949e}
+.dlegend i.ex{background:#221a33;border-color:#a98bdc}
+.dlegend i.hu{background:#2b1622;border-color:#e892bd}
+.dlegend i.pl{background:#13161c;border-color:#a98bdc;border-style:dashed}
+.dlegend i.br{background:#2c1512;border-color:#f0816a}
+
 /* tables */
 table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
 th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
@@ -491,7 +507,15 @@ footer{padding:40px 0 70px;color:var(--faint);font-size:14px;border-top:1px soli
 
 <footer><div class="wrap" style="padding:0">Built with Claude Code · full-system audit 2026-06-10 · supersedes the late-May explainer that previously lived at this URL. Sources: <code>~/scripts/</code> logs, launchd plists, SKILL.md files, <code>Vault Restructure Plan.xlsx</code> and the Workflow plan docs.</div></footer>
 
+<script src="mermaid.min.js"></script>
 <script>
+mermaid.initialize({startOnLoad:false, securityLevel:'loose', theme:'base',
+  themeVariables:{darkMode:true, background:'#0d1117', primaryColor:'#161b22', primaryTextColor:'#c9d1d9',
+    primaryBorderColor:'#2a3340', lineColor:'#6e7681', secondaryColor:'#1c2330', tertiaryColor:'#11151c',
+    clusterBkg:'#0d1117', clusterBorder:'#2a3340', edgeLabelBackground:'#0d1117', fontSize:'13px',
+    fontFamily:'-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif'},
+  flowchart:{htmlLabels:true, curve:'basis', nodeSpacing:28, rankSpacing:42}});
+
 const P = {live:'<span class="pill live">Live</span>', partial:'<span class="pill partial">Partial</span>', planned:'<span class="pill planned">Planned</span>', down:'<span class="pill down">Broken</span>'};
 
 const SYSTEMS = {
@@ -867,6 +891,349 @@ const SYSTEMS = {
 }
 };
 
+const MCLS = `
+classDef job fill:#2e2512,stroke:#e3b341,color:#e9d9a8
+classDef script fill:#152238,stroke:#6aa9ff,color:#c9d1d9
+classDef skill fill:#11261f,stroke:#5fb49c,color:#c9d1d9
+classDef file fill:#1a1f27,stroke:#8b949e,color:#c9d1d9
+classDef ext fill:#221a33,stroke:#a98bdc,color:#c9d1d9
+classDef human fill:#2b1622,stroke:#e892bd,color:#eec3d8
+classDef plan fill:#13161c,stroke:#a98bdc,color:#9aa3ad,stroke-dasharray:6 4
+classDef broken fill:#2c1512,stroke:#f0816a,color:#f0b3a5
+`;
+
+const LEGEND = `<div class="dlegend"><span class="lt">How it works · key:</span>
+<span class="sw"><i class="j"></i>launchd job</span>
+<span class="sw"><i class="sc"></i>script</span>
+<span class="sw"><i class="sk"></i>skill / Claude</span>
+<span class="sw"><i class="fi"></i>vault file</span>
+<span class="sw"><i class="ex"></i>external / API</span>
+<span class="sw"><i class="hu"></i>Isabella</span>
+<span class="sw"><i class="pl"></i>planned</span>
+<span class="sw"><i class="br"></i>broken / gap</span></div>`;
+
+const DIAGRAMS = {
+
+"task-system": `flowchart LR
+  voice["Voice note<br>iCloud Task Voice Notes"]:::file
+  jobTV["com.isabella.task-voice<br>every 10 min"]:::job
+  sTV["task-voice-pipeline.sh<br>+ transcribe-task-note.py"]:::script
+  gem["Gemini API<br>transcription"]:::ext
+  cap(["Isabella captures:<br>shortcut · chat · voice"]):::human
+  skT["/task · /idea · /resource<br>scored capture"]:::skill
+  jobIR["com.isabella.inbox-rename<br>fswatch, always on, .txt to .md"]:::job
+  items["_Inbox/To Do System/Items/<br>161 active items"]:::file
+  jobDT["com.isabella.daily-triage<br>first wake of the day"]:::job
+  skTr["/triage<br>morning ritual"]:::skill
+  cal["calibration-log.py<br>override log, 36 of ~50 rows"]:::script
+  bases["Tasks · Ideas · Resources .base<br>+ area pages with projects"]:::file
+  skDT["/daily-tasks<br>interactive review"]:::skill
+  iz(["Isabella decides"]):::human
+  p5c["Phase 5c auto-recalibration<br>at ~50 override rows"]:::plan
+  p6["Phase 6 calendar integration<br>blocked on INSEAD forwarding"]:::plan
+  disp["Stage 4b dispatcher<br>re-score + act"]:::plan
+  voice --> jobTV --> sTV --> gem --> items
+  cap --> skT --> items
+  cap --> items
+  jobIR --> items
+  jobDT --> skTr
+  items --> skTr --> bases
+  skTr --> cal
+  bases --> skDT --> iz
+  cal -.-> p5c
+  iz -.-> p6
+  bases -.-> disp`,
+
+"content-ingestion": `flowchart LR
+  phone(["iOS share sheet"]):::human
+  inc["_Inbox/Content/incoming.md<br>legacy dropbox.md as fallback"]:::file
+  drop["File drop<br>PDF · md · audio · video"]:::file
+  jobPC["com.isabella.process-content<br>10-min poll, 08:00-23:00"]:::job
+  wrap["sweep-if-pending.sh<br>zero-token pending check"]:::script
+  skP["/process<br>URL · file · sweep · paste"]:::skill
+  cli["content-ingestion/cli.py<br>router + 11 deterministic fetchers"]:::script
+  ftx["FT fetcher<br>selector broken 10 Jun"]:::broken
+  t2["Tier 2 fallback<br>subagent extraction"]:::skill
+  enr["Enrichment pass<br>summary · tags · content_format"]:::skill
+  conn["/connections<br>enforced by PostToolUse hook"]:::skill
+  note["Content Library/Content/<br>filed note, source verbatim"]:::file
+  lp["Landing page auto-create<br>at 3+ items, hub updated"]:::file
+  jrn["journal.md<br>append-only log"]:::file
+  phone --> inc
+  drop --> jobPC
+  inc --> jobPC --> wrap --> skP
+  skP --> cli --> enr
+  cli -.-> ftx
+  cli --> t2 --> enr
+  enr --> conn --> note --> lp
+  skP --> jrn`,
+
+"content-library": `flowchart LR
+  skP["/process pipeline"]:::skill
+  scan["content-scan/scan.py<br>monthly discovery, manual so far"]:::script
+  brf["/briefing · /mail-triage"]:::skill
+  cont["Content/<br>851 notes, one flat folder"]:::file
+  briefs["Briefings/<br>daily notes"]:::file
+  base["Content Library.base<br>All · Recent · format · outlet · topic"]:::file
+  lps["30 landing pages<br>interests · themes · channels"]:::file
+  hub["_Content Library.md hub<br>single MECE topic axis"]:::file
+  moc["Stage 3: landing pages become<br>live Bases queries, 10 of 38 MOCs"]:::plan
+  skP --> cont
+  scan --> cont
+  brf --> briefs
+  cont --> base --> hub
+  cont --> lps --> hub
+  lps -.-> moc`,
+
+"voice": `flowchart LR
+  subgraph lec["Lecture recordings"]
+    icl["iCloud<br>Lecture Recordings"]:::file
+    mover["~/lecture_mover.sh<br>stray, 30s poll, redundant"]:::broken
+    jobST["com.isabella.sync-transcripts<br>every 10 min"]:::job
+    vp["run-voice-pipeline.sh<br>iCloud to staging to GDrive"]:::script
+    gem1["transcribe-voice-notes.py<br>Gemini"]:::ext
+    sync["sync-transcripts-to-obsidian.sh<br>routes by course name"]:::script
+    src["Sources/L##/"]:::file
+  end
+  subgraph jpr["JPR voice notes · Dad's shared pipeline"]
+    jprf["iCloud JPR folder"]:::file
+    jobW["net.isotta.voice-transcription<br>60s watcher"]:::job
+    wpy["~/claude watcher.py<br>+ transcribe.py"]:::script
+    rev["review_server.py port 8080<br>phone via Tailscale"]:::script
+    ok(["Isabella reviews<br>+ approves"]):::human
+    ot["_Inbox/Other Transcripts/<br>5 waiting"]:::file
+  end
+  rt["/route-transcript P0-P3<br>Path A lecture · Path B meeting"]:::plan
+  mn["Meeting note + person-card<br>append, new metadata"]:::plan
+  icl --> mover
+  icl --> jobST --> vp --> gem1 --> sync --> src
+  jprf --> jobW --> wpy --> rev --> ok --> ot
+  ot -.-> rt
+  rt -.-> src
+  rt -.-> mn`,
+
+"mail": `flowchart LR
+  jobMT["com.isabella.mail-triage<br>30-min poll, AM + PM slots"]:::job
+  wrap["mail-triage.sh<br>slot gates · lock · watermark"]:::script
+  skMT["/mail-triage<br>Sonnet, scoped permissions:<br>send/reply/forward DENIED"]:::skill
+  marks(["Isabella's marks on<br>yesterday's digest"]):::human
+  read["MS365 mail-read MCP<br>Inbox + INSEAD since watermark"]:::ext
+  lists["6 seed lists<br>promo · substack · VIP · ..."]:::file
+  cls{"Classify<br>MECE tree"}
+  mng["MS365 manage MCP<br>file · delete · folders"]:::ext
+  drafts["Outlook Drafts<br>replies queued, never sent"]:::ext
+  send(["Isabella sends<br>from Outlook"]):::human
+  digest["Briefings mail note AM / PM<br>+ digest email + macOS ping"]:::file
+  state["state/ watermark ·<br>processed-ids · slot markers"]:::file
+  crmh["CRM hook: auto last_contact<br>on person notes"]:::plan
+  jobMT --> wrap --> skMT
+  marks --> skMT
+  skMT --> read --> cls
+  lists --> cls
+  cls --> mng
+  cls --> drafts --> send
+  cls --> digest --> marks
+  skMT --> state
+  skMT -.-> crmh`,
+
+"canvas": `flowchart LR
+  jobCS["com.isabella.canvas-sync<br>daily 07:00"]:::job
+  py["canvas-sync-playwright.py<br>--sync --assignments"]:::script
+  pw["Playwright profile<br>INSEAD SSO session"]:::ext
+  api["Canvas REST API<br>signed CDN downloads"]:::ext
+  st["~/.canvas-api/<br>manifest · downloaded · assignments"]:::file
+  src["2. INSEAD Sources/L##/"]:::file
+  trig["lecture-note-processor<br>rename-and-enrich trigger"]:::skill
+  jobCS --> py --> pw --> api --> src
+  py --> st
+  src --> trig`,
+
+"lectures": `flowchart LR
+  canv["Canvas sync<br>slides + readings, daily 07:00"]:::job
+  vp["Voice pipeline<br>transcripts, every 10 min"]:::job
+  src["Sources/L##/"]:::file
+  lnp["/lecture-note-processor<br>summary · detailed notes · wikilinks"]:::skill
+  note["Lecture note, status complete<br>48 still on placeholders"]:::broken
+  rev["/pdf-revision-notes"]:::skill
+  pdf["Revision PDF"]:::file
+  cp["/course-page<br>eval-gated site build"]:::skill
+  site["Course site<br>GitHub Pages"]:::ext
+  upd["/update pass 3<br>flags unprocessed sources"]:::skill
+  canv --> src
+  vp --> src
+  src --> lnp --> note
+  note --> rev --> pdf
+  note --> cp --> site
+  upd -.-> lnp`,
+
+"ideas": `flowchart LR
+  cap["/idea · voice capture"]:::skill
+  items["Items/ type: idea<br>15 active · 6 archived"]:::file
+  base["Ideas.base"]:::file
+  tri["/triage enrichment"]:::skill
+  pi["/process-idea<br>exists, barely used"]:::skill
+  silos["3 silos: Blog Ideas ·<br>Novel Ideas · Vault Connection Ideas"]:::file
+  empty["Ideas/ folder<br>empty"]:::broken
+  design(["Isabella's design pass<br>the actual blocker"]):::human
+  life["One lifecycle: incubate, then<br>project · writing · startup"]:::plan
+  tlog["Phase 7<br>Thought Log"]:::plan
+  moc["Ideas MOC<br>Stage 3"]:::plan
+  cap --> items --> base
+  items --> tri --> pi
+  pi -.-> empty
+  pi -.-> silos
+  design -.-> life
+  life -.-> moc
+  life -.-> tlog`,
+
+"meetings": `flowchart LR
+  ot["_Inbox/Other Transcripts/<br>5 waiting"]:::file
+  mn["/meeting-notes<br>manual, on demand"]:::skill
+  out["Structured meeting note<br>no fixed home yet"]:::file
+  rt["/route-transcript Path B<br>auto-classify, P0"]:::plan
+  meta["New metadata: people · areas ·<br>recorder · audio · actions"]:::plan
+  card["Person-card append<br>per attendee"]:::plan
+  tsys["actions feed<br>the Task System"]:::plan
+  mb["Meetings Base: by area ·<br>person · open actions"]:::plan
+  ot --> mn --> out
+  ot -.-> rt -.-> meta -.-> card
+  meta -.-> tsys
+  meta -.-> mb`,
+
+"restructure": `flowchart LR
+  s0(["Stage 0: ratify schema<br>3 decisions are Isabella's"]):::human
+  spike["Spike ONE MOC<br>validate Bases syntax"]:::plan
+  bf["Write + test backfill script<br>folder to areas/efforts/Up:"]:::plan
+  run["Run additive backfill<br>~875 files, no mass migration"]:::plan
+  mocs["Build 38 MOCs<br>9 areas · 5 efforts · 10 converts · wires"]:::plan
+  map["Map root +<br>Up: chains"]:::plan
+  unf["Unfiled view = 0<br>completeness proof"]:::plan
+  tmpl["Update templates + wire new<br>fields into every processor"]:::plan
+  excl["The exception: INSEAD<br>stays folder-structured"]:::file
+  s0 -.-> spike -.-> bf -.-> run -.-> mocs -.-> map -.-> unf
+  mocs -.-> tmpl
+  excl --- s0`,
+
+"briefing": `flowchart LR
+  jobB["com.isabella.briefing<br>30-min poll, after 07:00, once a day"]:::job
+  wrap["briefing-daily.sh<br>log redirect missing"]:::script
+  skB["/briefing<br>Sonnet"]:::skill
+  scan["content-scan/scan.py<br>Anthropic Docs + Engineering refresh"]:::script
+  disc["discover.py — RSS:<br>FT AI · FT PE · FT World · 4 Substacks"]:::script
+  ddp["Dedupe vs corpus ·<br>briefed-urls · ingestion queue"]:::script
+  sel{"Select + rank<br>12-20 items"}
+  cli["cli.py full-text fetch, cap 8<br>FT bot-blocked"]:::script
+  note["Briefings/ daily note"]:::file
+  mail["MS365 send-mail<br>HTML email to self"]:::ext
+  burls["briefed-urls.txt<br>+ journal line"]:::file
+  pn(["Isabella replies<br>'process #N'"]):::human
+  proc["/process<br>into Content Library"]:::skill
+  jobB --> wrap --> skB
+  skB --> scan
+  skB --> disc --> ddp --> sel --> cli --> note --> mail --> pn --> proc
+  skB --> burls`,
+
+"crm": `flowchart LR
+  ep["/enrich-person<br>on demand"]:::skill
+  sub["5 parallel scans: vault · CV book ·<br>web · LinkedIn · email 360 days"]:::skill
+  ms["MS365 mail MCP<br>last_contact evidence"]:::ext
+  app["Append-only synthesis<br>What we've discussed · follow-ups"]:::skill
+  pn["People/All People/<br>147 person notes"]:::file
+  ov["People Overview +<br>4 industry pages"]:::file
+  cb["Companies Bank<br>14 notes"]:::file
+  hook["mail-triage hook:<br>auto last_contact"]:::plan
+  pb["Path B: person-card append<br>from meeting transcripts"]:::plan
+  fup["Follow-up surfacing in<br>/triage and /daily-tasks"]:::plan
+  prep["/prep-meeting<br>briefing before a call"]:::plan
+  ep --> sub --> app --> pn
+  sub --> ms
+  pn --> ov
+  pn --- cb
+  hook -.-> pn
+  pb -.-> pn
+  pn -.-> fup
+  pn -.-> prep`,
+
+"consultants": `flowchart LR
+  q(["A question worth<br>multiple perspectives"]):::human
+  disp["/consultant<br>dispatcher"]:::skill
+  c5["5 consultants: lesswrong ·<br>ai-builder · ob · nego · gp"]:::skill
+  corp["Corpora on disk<br>cited verbatim, never paraphrased"]:::file
+  orch["/orchestrate<br>blind critique rounds, adjudicates"]:::skill
+  pan["/panel<br>map-reduce, complementary lenses"]:::skill
+  syn["Syntheses/<br>disagreement preserved"]:::file
+  q --> disp --> c5 --> corp
+  q --> orch --> c5
+  q --> pan --> c5
+  orch --> syn
+  pan --> syn`,
+
+"rendering": `flowchart LR
+  yaml["YAML description"]:::file
+  tok["tokens_to_css.py<br>shared design tokens"]:::script
+  det["/render-det<br>deterministic house style"]:::skill
+  out1["PDF / HTML"]:::file
+  gen["/render-gen draft · /onepager<br>shotgun + judge loop"]:::skill
+  ev["/evaluate<br>fresh browser-only evaluator"]:::skill
+  out2["PNG poster ·<br>PPTX deck"]:::file
+  vc["/vibecode<br>prompt to deployed site"]:::skill
+  cpg["/course-page"]:::skill
+  site["GitHub Pages / Vercel"]:::ext
+  yaml --> det --> out1
+  tok --> det
+  tok --> gen
+  gen <--> ev
+  gen --> out2
+  vc --> site
+  cpg --> site`,
+
+"butler": `flowchart LR
+  caps["Capture systems: mail ·<br>tasks · transcripts · calendar"]:::file
+  slice["Already alive: mail-triage<br>drafts-never-sends · /triage prep"]:::skill
+  tick["Ticket store<br>one per actionable thing"]:::plan
+  dsp["Dispatcher<br>watches the queues"]:::plan
+  auto["Auto, reversible: research ·<br>drafts · filing · calendar reads"]:::plan
+  appr["Approval queue, irreversible:<br>send · book · pay"]:::plan
+  tap(["One tap<br>from Isabella"]):::human
+  exec["Execute + log"]:::plan
+  caps -.-> tick -.-> dsp
+  dsp -.-> auto
+  dsp -.-> appr -.-> tap -.-> exec
+  slice -. proven pattern .-> auto`,
+
+"infra": `flowchart LR
+  caf["caffeinate -imsu<br>Mac never sleeps"]:::job
+  pl["14 launchd plists<br>~/Library/LaunchAgents"]:::job
+  wrap["wrapper.sh pattern:<br>gate · lock · marker · log"]:::script
+  hl["claude -p /skill<br>headless, model-pinned"]:::skill
+  vault["Obsidian vault<br>iCloud"]:::file
+  hooks["Hooks: log-tool-use Pre ·<br>connections-check Post"]:::script
+  bk["backup-scripts.sh<br>Sundays 03:00"]:::script
+  od["OneDrive"]:::ext
+  dad["~/claude sparse checkout<br>Dad's repo, runs the voice jobs"]:::ext
+  stray["Strays: lecture_mover.sh ·<br>content-scan plist not installed"]:::broken
+  caf --- pl
+  pl --> wrap --> hl --> vault
+  hooks --> hl
+  pl --> bk --> od
+  dad --- pl
+  stray -.- pl`,
+
+"maintenance": `flowchart LR
+  jobUN["com.isabella.update-nudge<br>every 2 hours"]:::job
+  ntf["macOS notification<br>if Update Log over 3 days stale"]:::script
+  iz(["Isabella runs /update"]):::human
+  upd["/update — 6 passes<br>lightweight mode, by decision"]:::skill
+  log["Update Log.md"]:::file
+  defer["Deferred queue: cross-refs ·<br>wikilinks · constrained fields"]:::file
+  redo["Metadata redo, Stage 0<br>unblocks deep mode"]:::plan
+  wk["Weekly /update scheduler<br>open checkbox"]:::plan
+  jobUN --> ntf --> iz --> upd --> log
+  upd --> defer
+  redo -.-> upd
+  upd -.-> wk`
+};
+
 function renderDetail(id){
   const s = SYSTEMS[id]; if(!s) return;
   const el = document.getElementById('detail');
@@ -874,6 +1241,7 @@ function renderDetail(id){
     <div class="dethead"><h2>${s.name}</h2>${P[s.status]}</div>
     <div class="detmeta">${s.meta}</div>
     <p style="max-width:820px">${s.what}</p>
+    ${DIAGRAMS[id] ? LEGEND + `<div class="mermaid">${DIAGRAMS[id] + MCLS}</div>` : ''}
     <div class="twocol">
       <div class="panel now"><h4>Where it is now (verified)</h4><ul>${s.now.map(x=>`<li>${x}</li>`).join('')}</ul></div>
       <div class="panel target"><h4>Where it's going</h4><ul>${s.target.map(x=>`<li>${x}</li>`).join('')}</ul></div>
@@ -882,6 +1250,7 @@ function renderDetail(id){
     <div class="chips"><span class="lk" style="font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em;margin-right:6px">Connected:</span>${s.links.map(l=>`<span class="chip" data-sys="${l}">${SYSTEMS[l]?SYSTEMS[l].name:l}</span>`).join('')}</div>
     <div class="srcs">Sources: ${s.sources.map(x=>`<code>${x}</code>`).join(' · ')}</div>`;
   bindSysLinks(el);
+  if(window.mermaid){ mermaid.run({nodes: el.querySelectorAll('.mermaid')}).catch(e=>console.error('mermaid:',e)); }
 }
 
 function show(view){

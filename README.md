@@ -7,7 +7,7 @@ Live at: https://izzyisotta.github.io/vault-system-explainer/
 ## What's on it
 
 - **Map** — the four-layer target architecture (Capture → Process → Surface → Think/Act, plus Infrastructure), every system a clickable node with a status pill
-- **System detail pages** — 17 systems, each with verified current state, end state, and a numbered A-to-B plan
+- **System detail pages** — 17 systems, each with a Mermaid flow diagram (nodes typed: launchd job / script / skill / vault file / external API / Isabella / planned / broken), verified current state, end state, and a numbered A-to-B plan
 - **Roadmap** — the Stage 0–5 build ladder plus a near-term punch list found by the audit
 - **Skills** — all 35 slash skills with maturity ratings, filterable by system
 - **Scripts & Jobs** — the 14 launchd jobs with last-run evidence, hooks, and called-out strays
@@ -16,7 +16,7 @@ Live at: https://izzyisotta.github.io/vault-system-explainer/
 
 ## Structure
 
-Single self-contained `index.html` (vanilla JS, no build step). System detail content lives in the `SYSTEMS` object at the bottom of the file; tables are static HTML. Hash routing: `#crm`, `#mail`, `#roadmap` etc. deep-link to a system or tab.
+`index.html` (vanilla JS, no build step) plus a vendored `mermaid.min.js` (v11, served locally — no CDN). System detail content lives in the `SYSTEMS` object, diagrams in the `DIAGRAMS` object (Mermaid flowchart source; shared `classDef` palette in `MCLS`). Tables are static HTML. Hash routing: `#crm`, `#mail`, `#roadmap` etc. deep-link to a system or tab.
 
 ## Updating
 
