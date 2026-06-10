@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How my vault turns inputs into permanent assets</title>
+<title>System Map · How my whole setup works, and where it's going</title>
 <style>
 :root{
   --bg:#0d1117; --card:#161b22; --card2:#1c2330; --line:#2a3340;
@@ -11,216 +11,913 @@
   --accent:#5fb49c; --accent2:#6aa9ff; --warn:#e3b341; --down:#f0816a; --plan:#a98bdc;
 }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   line-height:1.6;font-size:16px}
-.wrap{max-width:920px;margin:0 auto;padding:0 22px}
-header.hero{padding:64px 0 40px;border-bottom:1px solid var(--line)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+a{color:var(--accent2);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(13,17,23,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:4px;align-items:center;overflow-x:auto;padding:0 14px}
+nav .brand{font-weight:700;color:var(--accent);font-size:14px;padding:14px 10px;white-space:nowrap;cursor:pointer}
+nav button{background:none;border:none;color:var(--dim);font-size:14px;padding:14px 12px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;font-family:inherit}
+nav button:hover{color:var(--text)}
+nav button.active{color:var(--text);border-bottom-color:var(--accent)}
+
+/* hero */
+header.hero{padding:54px 0 34px;border-bottom:1px solid var(--line)}
 .kicker{color:var(--accent);font-weight:600;letter-spacing:.04em;text-transform:uppercase;font-size:13px}
-h1{font-size:38px;line-height:1.15;margin:14px 0 16px}
-.lede{font-size:19px;color:var(--dim);max-width:680px}
-.byline{margin-top:18px;color:var(--faint);font-size:14px}
-section{padding:46px 0;border-bottom:1px solid var(--line)}
-h2{font-size:26px;margin:0 0 6px}
-.sub{color:var(--dim);margin:0 0 22px;font-size:15px}
-h3{font-size:18px;margin:26px 0 8px}
-p{margin:10px 0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
-.grid{display:grid;gap:14px}
-.g2{grid-template-columns:1fr 1fr}
-.g3{grid-template-columns:1fr 1fr 1fr}
-@media(max-width:680px){.g2,.g3{grid-template-columns:1fr}h1{font-size:30px}}
-code{background:#0b0f14;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px;color:#b8c7d9}
+h1{font-size:36px;line-height:1.15;margin:12px 0 14px}
+.lede{font-size:18px;color:var(--dim);max-width:760px}
+.byline{margin-top:16px;color:var(--faint);font-size:14px}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 16px}
+.stat b{display:block;font-size:22px;color:var(--text)}
+.stat span{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.03em}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;align-items:center}
+.legend .lk{font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em;margin-right:2px}
+
+/* pills */
 .pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
-  padding:3px 9px;border-radius:20px;vertical-align:middle;margin-left:8px}
+  padding:3px 9px;border-radius:20px;vertical-align:middle}
 .live{background:rgba(95,180,156,.16);color:var(--accent);border:1px solid rgba(95,180,156,.4)}
 .partial{background:rgba(227,179,65,.14);color:var(--warn);border:1px solid rgba(227,179,65,.4)}
 .planned{background:rgba(169,139,220,.14);color:var(--plan);border:1px solid rgba(169,139,220,.4)}
 .down{background:rgba(240,129,106,.14);color:var(--down);border:1px solid rgba(240,129,106,.4)}
-.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:18px 0}
-.step{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;flex:1;min-width:120px}
-.step .n{color:var(--accent);font-weight:700;font-size:12px}
-.step .t{font-weight:600;margin-top:2px}
-.step .d{color:var(--dim);font-size:13px;margin-top:4px}
-.arrow{align-self:center;color:var(--faint);font-size:22px;padding:0 8px}
-.fan{display:grid;grid-template-columns:1fr;gap:12px}
-.fanrow{display:grid;grid-template-columns:200px 30px 1fr;align-items:center;gap:8px}
-@media(max-width:680px){.fanrow{grid-template-columns:1fr}}
-.dest{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:10px 13px}
-.dest b{color:var(--text)} .dest span{color:var(--dim);font-size:13px}
-.src{background:rgba(106,169,255,.1);border:1px solid rgba(106,169,255,.4);border-radius:9px;padding:12px 14px;font-weight:600}
+
+/* views */
+.view{display:none;padding:38px 0 70px}
+.view.active{display:block}
+h2{font-size:25px;margin:0 0 6px}
+.sub{color:var(--dim);margin:0 0 22px;font-size:15px;max-width:780px}
+h3{font-size:18px;margin:28px 0 10px}
+p{margin:10px 0}
+code{background:#0b0f14;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px;color:#b8c7d9;word-break:break-word}
+ul{margin:8px 0;padding-left:20px} li{margin:5px 0}
+.note{border-left:3px solid var(--accent);padding:6px 0 6px 16px;color:var(--dim);margin:16px 0}
+.warnnote{border-left:3px solid var(--down);padding:6px 0 6px 16px;color:var(--dim);margin:16px 0}
+
+/* map layers */
+.layer{margin:22px 0}
+.layer-label{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.layer-label b{font-size:15px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent2)}
+.layer-label span{color:var(--faint);font-size:13px}
+.nodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:12px}
+.node{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .15s, transform .15s}
+.node:hover{border-color:var(--accent);transform:translateY(-2px)}
+.node .nt{font-weight:650;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.node .nd{color:var(--dim);font-size:13px;margin-top:6px}
+.downarrow{text-align:center;color:var(--faint);font-size:20px;margin:2px 0}
+
+/* detail */
+.crumb{font-size:13px;color:var(--faint);margin-bottom:14px}
+.crumb a{cursor:pointer}
+.dethead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+.dethead h2{margin:0}
+.detmeta{color:var(--faint);font-size:13px;margin-bottom:18px}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+@media(max-width:760px){.twocol{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.panel h4{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+.panel.now h4{color:var(--accent)}
+.panel.target h4{color:var(--plan)}
+.panel ul{font-size:14.5px}
+.gapblock{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:18px 0}
+.gapblock h4{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--warn)}
+.gapblock ol{margin:8px 0;padding-left:22px;font-size:14.5px}
+.gapblock ol li{margin:7px 0}
+.chips{margin:16px 0}
+.chip{display:inline-block;background:#0b0f14;border:1px solid var(--line);border-radius:20px;padding:4px 13px;font-size:13px;color:var(--accent2);margin:3px 4px 3px 0;cursor:pointer}
+.chip:hover{border-color:var(--accent2)}
+.srcs{font-size:13px;color:var(--faint);margin-top:18px}
+.srcs code{font-size:12px}
+
+/* tables */
 table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
-th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
 th{color:var(--dim);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em}
 .muted{color:var(--dim)}
-ul{margin:8px 0;padding-left:20px} li{margin:5px 0}
-.note{border-left:3px solid var(--accent);padding:6px 0 6px 16px;color:var(--dim);margin:14px 0}
-footer{padding:40px 0 70px;color:var(--faint);font-size:14px}
+.small{font-size:13px}
+.filterbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.fbtn{background:var(--card);border:1px solid var(--line);border-radius:20px;color:var(--dim);font-size:13px;padding:5px 14px;cursor:pointer;font-family:inherit}
+.fbtn.active{border-color:var(--accent);color:var(--accent)}
+.scrolltable{overflow-x:auto}
+
+/* roadmap */
+.stage{display:grid;grid-template-columns:130px 1fr;gap:16px;margin:0 0 4px;padding:18px 0;border-bottom:1px solid var(--line)}
+@media(max-width:680px){.stage{grid-template-columns:1fr}}
+.stage .sn{font-weight:700;color:var(--accent2)}
+.stage .sn small{display:block;color:var(--faint);font-weight:400}
+.stage ul{font-size:14.5px;margin-top:4px}
+.punch{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin:18px 0}
+.punch ol li{margin:8px 0}
 .tag{display:inline-block;background:#0b0f14;border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:12px;color:var(--accent);margin:2px 3px 2px 0}
+
+footer{padding:40px 0 70px;color:var(--faint);font-size:14px;border-top:1px solid var(--line)}
+@media(max-width:680px){h1{font-size:28px}}
 </style>
 </head>
 <body>
+
+<nav><div class="wrap">
+  <span class="brand" data-view="map">SYSTEM MAP</span>
+  <button data-view="map" class="active">Map</button>
+  <button data-view="roadmap">Roadmap</button>
+  <button data-view="skills">Skills</button>
+  <button data-view="scripts">Scripts &amp; Jobs</button>
+  <button data-view="metadata">Metadata &amp; MOCs</button>
+  <button data-view="freddie">Freddie's Playbook</button>
+</div></nav>
+
 <div class="wrap">
 
 <header class="hero">
-  <div class="kicker">My knowledge system</div>
-  <h1>How my vault turns inputs into permanent assets</h1>
-  <p class="lede">Recordings, links, lectures and meetings come in. A small amount of automation files each one by <b>metadata</b>, not folders, and saved queries do the cross-referencing forever. This is the target design, with honest badges for what's actually running today.</p>
-  <p class="byline">Living document &middot; built with Claude &middot; status as of late May 2026</p>
+  <div class="kicker">Isabella's personal AI infrastructure</div>
+  <h1>Everything I've built, what actually runs, and where it's going</h1>
+  <p class="lede">A verified map of the whole system: every pipeline audited against its real scripts, launchd logs and last-run timestamps, not just its documentation. Click any box for the current state, the end state, and how to get from A to B.</p>
+  <p class="byline">Living document · audited by Claude from scripts, logs and the Vault Restructure Plan · status as of <b>10 June 2026</b></p>
+  <div class="stats">
+    <div class="stat"><b>14</b><span>launchd jobs</span></div>
+    <div class="stat"><b>35</b><span>skills</span></div>
+    <div class="stat"><b>~2,889</b><span>vault files</span></div>
+    <div class="stat"><b>851</b><span>content notes</span></div>
+    <div class="stat"><b>147</b><span>person notes</span></div>
+    <div class="stat"><b>0 / 38</b><span>MOCs built</span></div>
+  </div>
   <div class="legend">
+    <span class="lk">Status key</span>
     <span class="pill live">Live</span>
     <span class="pill partial">Partial</span>
     <span class="pill planned">Planned</span>
-    <span class="pill down">Down</span>
+    <span class="pill down">Broken bit</span>
   </div>
 </header>
 
-<section>
-  <h2>The one idea</h2>
-  <p class="sub">Borrowed from Freddie's system, adapted to my vault.</p>
-  <div class="card">
-    <p style="font-size:18px;margin:0"><b>Don't file into folders. File into metadata, and let a saved query do the cross-referencing.</b></p>
-  </div>
-  <p>Folders force one note into one place, so a conversation that touches three projects has to pick a home and the tree fights you. Metadata and links don't have that problem: a note can belong to everything at once, surfaced wherever it's relevant. Capture stays brainless so it never becomes a chore; all the intelligence happens later, in the vault, where I control it.</p>
-  <div class="grid g3">
-    <div class="card"><h3 style="margin-top:0">Capture is cheap</h3><p class="muted" style="font-size:14px;margin:0">Record or share with zero decisions. No categorising in the moment.</p></div>
-    <div class="card"><h3 style="margin-top:0">Vault does the work</h3><p class="muted" style="font-size:14px;margin:0">Enrichment, tagging and routing happen on my side, not at capture.</p></div>
-    <div class="card"><h3 style="margin-top:0">Queries draw the map</h3><p class="muted" style="font-size:14px;margin:0">Tag well once; dashboards and related-notes rebuild themselves.</p></div>
-  </div>
-</section>
+<!-- ============ MAP VIEW ============ -->
+<section class="view active" id="view-map">
+  <h2>The map</h2>
+  <p class="sub">Organised by the target four-layer architecture from the Vault Restructure Plan: stuff comes in (Capture), gets enriched and filed by metadata (Process), gets found again through queries (Surface), and gets used (Think / Act). Infrastructure underneath keeps it all running. Click any node.</p>
 
-<section>
-  <h2>How the whole vault is structured</h2>
-  <p class="sub">Folders where structure is load-bearing; flat + metadata everywhere else.</p>
-  <div class="grid g2">
-    <div class="card">
-      <h3 style="margin-top:0">Stays in folders</h3>
-      <ul>
-        <li><b>INSEAD</b> &mdash; course &rarr; lecture &rarr; <code>Sources/L##/</code>. The lecture-note pipeline depends on this exact shape. Time-bounded: it freezes as an archive at graduation.</li>
-        <li><b>Projects</b> (startups) &mdash; a project is a folder.</li>
-        <li><b>_Setup / infrastructure</b> &mdash; templates, skills, config.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3 style="margin-top:0">Flat + metadata</h3>
-      <ul>
-        <li><b>People</b> and <b>Inbox</b> &mdash; already flat databases driven by Bases. <span class="pill live">Live</span></li>
-        <li><b>Content Library</b> &mdash; one flat folder, classified by <code>content_format</code> + landing pages. <span class="pill live">Live</span></li>
-        <li><b>Meetings / talks</b> &mdash; the next thing to go flat. <span class="pill planned">Planned</span></li>
-        <li><b>Creative / Career</b> &mdash; flatten later, by metadata.</li>
-      </ul>
+  <div class="layer">
+    <div class="layer-label"><b>1 · Capture</b><span>stuff comes in, zero decisions at capture time</span></div>
+    <div class="nodes">
+      <div class="node" data-sys="task-system"><div class="nt">Task System <span class="pill live">Live</span></div><div class="nd">Capture → triage → surface. 161 active items, 3 dashboards, daily auto-triage.</div></div>
+      <div class="node" data-sys="content-ingestion"><div class="nt">Content Ingestion <span class="pill live">Live</span></div><div class="nd">Phone share / URL / PDF → fetch → enrich → filed note. Sweeps every 10 min.</div></div>
+      <div class="node" data-sys="voice"><div class="nt">Voice &amp; Transcripts <span class="pill partial">Partial</span></div><div class="nd">Three audio pipelines run; transcript routing to meetings and people not built.</div></div>
+      <div class="node" data-sys="mail"><div class="nt">Email Scanner <span class="pill partial">Partial</span></div><div class="nd">Twice-daily mailbox triage. One supervised run so far; headless unproven.</div></div>
+      <div class="node" data-sys="canvas"><div class="nt">Canvas Sync <span class="pill live">Live</span></div><div class="nd">INSEAD LMS → vault, daily 07:00 via Playwright.</div></div>
     </div>
   </div>
-  <div class="note">The hierarchy is a link graph, not a folder tree. Going forward, INSEAD is the one permanent exception; everything new is flat and metadata-first.</div>
-</section>
+  <div class="downarrow">↓</div>
 
-<section>
-  <h2>Where one input actually ends up</h2>
-  <p class="sub">A single recording doesn't become one note &mdash; it scatters into the right places, and a query stitches them back together.</p>
+  <div class="layer">
+    <div class="layer-label"><b>2 · Process &amp; File</b><span>enrichment applies the schema; metadata decides filing, not folders</span></div>
+    <div class="nodes">
+      <div class="node" data-sys="content-library"><div class="nt">Content Library <span class="pill live">Live</span></div><div class="nd">851 flat notes, 30 landing pages, Bases hub. The model for the whole vault.</div></div>
+      <div class="node" data-sys="lectures"><div class="nt">Lecture Pipeline <span class="pill live">Live</span></div><div class="nd">Recording → transcript → structured note. Running, but 48 notes still placeholders.</div></div>
+      <div class="node" data-sys="ideas"><div class="nt">Idea System <span class="pill planned">Planned</span></div><div class="nd">Capture works; processing is fragmented across silos. Needs its design pass.</div></div>
+      <div class="node" data-sys="meetings"><div class="nt">Meeting Notes <span class="pill planned">Planned</span></div><div class="nd">Skill exists; the automatic transcript → meeting note → person card flow does not.</div></div>
+      <div class="node" data-sys="restructure"><div class="nt">Vault Restructure <span class="pill planned">Planned</span></div><div class="nd">The flat, metadata-first vault. Schema drafted, 38 MOCs specced, none built.</div></div>
+    </div>
+  </div>
+  <div class="downarrow">↓</div>
 
-  <h3>A voice note <span class="pill partial">Partial</span></h3>
-  <div class="fan">
-    <div class="src">A 30-minute recording (Just Press Record)</div>
-    <div class="fanrow"><div class="dest"><b>Transcribe + enrich</b><br><span>AssemblyAI &rarr; Claude &rarr; review viewer</span> <span class="pill live">Live</span></div><div class="arrow">&rarr;</div>
-      <div class="dest"><b>Then it routes by type</b> <span class="pill planned">Planned</span><br><span>The vault classifies it &mdash; lecture or meeting &mdash; and files accordingly.</span></div></div>
-    <div class="fanrow"><div class="dest"><b>If lecture</b></div><div class="arrow">&rarr;</div><div class="dest"><span>Into <code>INSEAD/&lt;Course&gt;/Sources/L##/</code> + the lecture note, via lecture-note-processor.</span></div></div>
-    <div class="fanrow"><div class="dest"><b>If meeting / talk</b></div><div class="arrow">&rarr;</div><div class="dest"><span>A synthesis note (flat) + the raw transcript at the bottom + the <b>People</b> cards of attendees updated + relevant project notes.</span></div></div>
-    <div class="fanrow"><div class="dest"><b>then the query</b></div><div class="arrow">&rarr;</div><div class="dest"><span>Surfaces it next to every note sharing a <b>person</b>, <b>area</b> or <b>topic</b> &mdash; scored, ranked, automatic.</span></div></div>
+  <div class="layer">
+    <div class="layer-label"><b>3 · Surface</b><span>finding things again: queries, dashboards, briefings</span></div>
+    <div class="nodes">
+      <div class="node" data-sys="briefing"><div class="nt">Daily Briefing <span class="pill live">Live</span></div><div class="nd">FT + Substacks scanned every morning, one note + one email. Two days old.</div></div>
+      <div class="node" data-sys="crm"><div class="nt">CRM / People <span class="pill partial">Partial</span></div><div class="nd">147 person notes and an enrich skill, but no active layer: nothing nudges follow-ups.</div></div>
+      <div class="node" data-sys="restructure"><div class="nt">MOC Dashboards <span class="pill planned">Planned</span></div><div class="nd">38 Bases-driven map pages off one Map root. The biggest declared gap.</div></div>
+    </div>
+  </div>
+  <div class="downarrow">↓</div>
+
+  <div class="layer">
+    <div class="layer-label"><b>4 · Think &amp; Act</b><span>the layer that's actually yours</span></div>
+    <div class="nodes">
+      <div class="node" data-sys="consultants"><div class="nt">Consultants &amp; Orchestration <span class="pill live">Live</span></div><div class="nd">5 corpus-grounded consultants, /orchestrate debates, /panel map-reduce.</div></div>
+      <div class="node" data-sys="rendering"><div class="nt">Output &amp; Rendering <span class="pill live">Live</span></div><div class="nd">House-style PDFs, eval-driven posters and decks, course sites, vibecoded apps.</div></div>
+      <div class="node" data-sys="butler"><div class="nt">The Butler <span class="pill planned">Planned</span></div><div class="nd">Freddie-style dispatcher: auto-prep everything, one approval tap. Deferred lane.</div></div>
+    </div>
+  </div>
+  <div class="downarrow">↓</div>
+
+  <div class="layer">
+    <div class="layer-label"><b>0 · Infrastructure</b><span>the machinery underneath</span></div>
+    <div class="nodes">
+      <div class="node" data-sys="infra"><div class="nt">Scripts, Jobs &amp; Hooks <span class="pill live">Live</span></div><div class="nd">14 launchd jobs, ~20 script folders, 2 hooks, weekly backup. A few strays flagged.</div></div>
+      <div class="node" data-sys="maintenance"><div class="nt">Vault Maintenance <span class="pill partial">Partial</span></div><div class="nd">/update in deliberate holding pattern until the metadata redo lands.</div></div>
+    </div>
   </div>
 
-  <h3 style="margin-top:30px">A shared link <span class="pill down">Down</span></h3>
-  <div class="fan">
-    <div class="src">A URL or dropped PDF</div>
-    <div class="fanrow"><div class="dest"><b>Ingestion pipeline</b><br><span>fetch &rarr; enrich &rarr; evaluate</span></div><div class="arrow">&rarr;</div>
-      <div class="dest"><span>A fully-tagged note in <code>Content Library/Content/</code> with the verbatim source preserved at the bottom.</span></div></div>
-    <div class="fanrow"><div class="dest"><b>then</b></div><div class="arrow">&rarr;</div><div class="dest"><span>Appears on its channel landing page + any interest it touches, via Bases.</span></div></div>
-  </div>
-  <div class="note">Status: the ingestion pipeline is currently <b>down</b> on a missing dependency (<code>pymupdf4llm</code>), so links are filed by hand for now.</div>
+  <div class="note">How to read this: <b>Live</b> means verified running with recent log evidence. <b>Partial</b> means some of it runs and some is missing or unproven. <b>Planned</b> means designed on paper (usually in the Vault Restructure Plan Excel) but not built. Every claim on the detail pages was checked against actual scripts and logs on 10 June 2026.</div>
 </section>
 
-<section>
-  <h2>The content system</h2>
-  <p class="sub">Third-party content I consume &rarr; a tagged, searchable library.</p>
-  <div class="flow">
-    <div class="step"><div class="n">1</div><div class="t">Capture</div><div class="d">Share a URL, drop a PDF, or the phone shortcut appends to a dropbox file.</div></div>
-    <div class="arrow">&rarr;</div>
-    <div class="step"><div class="n">2</div><div class="t">Fetch</div><div class="d">A deterministic fetcher pulls the raw content (article, podcast, YouTube, etc.).</div></div>
-    <div class="arrow">&rarr;</div>
-    <div class="step"><div class="n">3</div><div class="t">Enrich</div><div class="d">Claude writes summary, key points, tags, connections.</div></div>
-    <div class="arrow">&rarr;</div>
-    <div class="step"><div class="n">4</div><div class="t">File</div><div class="d">A note in <code>Content Library/Content/</code>, verbatim source at the bottom.</div></div>
-  </div>
-  <table>
-    <tr><th>Piece</th><th>What it does</th><th>Status</th></tr>
-    <tr><td>Content Library + Bases dashboard</td><td>Flat folder, views by format / outlet / topic / channel</td><td><span class="pill live">Live</span></td></tr>
-    <tr><td><code>/process-link</code></td><td>Process one URL now</td><td><span class="pill down">Down (dependency)</span></td></tr>
-    <tr><td><code>/triage-content</code></td><td>Scheduled sweep of the content inbox</td><td><span class="pill down">Down (dependency)</span></td></tr>
-    <tr><td>Monthly content scan</td><td>Proactively pulls new items from configured sources</td><td><span class="pill partial">Intermittent</span></td></tr>
-    <tr><td>Channel landing pages</td><td>Auto-created at 3+ items from an outlet</td><td><span class="pill live">Live</span></td></tr>
-  </table>
+<!-- ============ SYSTEM DETAIL VIEW ============ -->
+<section class="view" id="view-system">
+  <div class="crumb"><a data-view="map">← Back to map</a></div>
+  <div id="detail"></div>
 </section>
 
-<section>
-  <h2>The meeting-notes system</h2>
-  <p class="sub">The piece being built next. Dumb capture, all enrichment in the vault.</p>
-  <div class="flow">
-    <div class="step"><div class="n">1</div><div class="t">Record</div><div class="d">Just Press Record. No tags, no decisions.</div></div>
-    <div class="arrow">&rarr;</div>
-    <div class="step"><div class="n">2</div><div class="t">Transcribe</div><div class="d">AssemblyAI + Claude &rarr; review viewer to glance &amp; correct.</div></div>
-    <div class="arrow">&rarr;</div>
-    <div class="step"><div class="n">3</div><div class="t">Route</div><div class="d">Vault pass classifies lecture vs meeting and infers metadata.</div></div>
-    <div class="arrow">&rarr;</div>
-    <div class="step"><div class="n">4</div><div class="t">File + surface</div><div class="d">Right folder, assets linked, transcript in body, on the dashboard.</div></div>
-  </div>
-  <table>
-    <tr><th>Piece</th><th>Status</th></tr>
-    <tr><td>Voice capture &rarr; transcript &rarr; review viewer &rarr; vault inbox</td><td><span class="pill live">Live</span></td></tr>
-    <tr><td>Auto-routing (lecture vs meeting) + metadata inference</td><td><span class="pill planned">Planned</span></td></tr>
-    <tr><td>Flat meeting-notes folder + dashboard</td><td><span class="pill planned">Planned</span></td></tr>
-    <tr><td>People-card updates from each meeting</td><td><span class="pill planned">Planned</span></td></tr>
-  </table>
-  <div class="note">Built forward-compatible with the flat, metadata-first target so it never needs redoing when the rest of the vault flattens.</div>
+<!-- ============ ROADMAP VIEW ============ -->
+<section class="view" id="view-roadmap">
+  <h2>From A to B</h2>
+  <p class="sub">The Vault Restructure Plan defines a build ladder. Stages 1, 2 and 4a are in decent shape; Stage 0 (lock the schema) has not happened, and everything downstream of it is waiting. The plan's own words: "Critical path: 0 → 1 → 2 → 3."</p>
+
+  <div class="stage"><div class="sn">Stage 0<small>not done</small></div><div>
+    <b>Lock the schema <span class="pill planned">Blocking everything</span></b>
+    <ul>
+      <li>Ratify the metadata model: <code>areas</code>, <code>efforts</code>, <code>people</code>, <code>related</code>, <code>description</code> as new fields; tags demoted to keywords + person-names only.</li>
+      <li>Resolve the open deviations (D1 to D8): entity wikilinks vs tags, keep or drop <code>status</code>, one inbox or two, does <code>/connections</code> survive live Related queries.</li>
+      <li>Reconcile <code>area</code> (single, task system) vs <code>areas</code> (list, vault-wide). This is gap #1 in the Excel and it touches every dashboard.</li>
+    </ul>
+  </div></div>
+
+  <div class="stage"><div class="sn">Stage 1<small>mostly live</small></div><div>
+    <b>Capture spine <span class="pill live">Live</span></b>
+    <ul>
+      <li>Running: task voice (10-min poll), content inbox sweep (10-min, gated), phone shortcut, mail triage (day one), Canvas sync (daily 07:00), lecture + JPR voice pipelines.</li>
+      <li>Loose ends: iOS shortcut still appends to the legacy <code>dropbox.md</code> name (fallback catches it); mail triage has never run headless.</li>
+    </ul>
+  </div></div>
+
+  <div class="stage"><div class="sn">Stage 2<small>half built</small></div><div>
+    <b>Processors <span class="pill partial">Partial</span></b>
+    <ul>
+      <li>Live: <code>/process</code> (11 fetchers + Tier 2 fallback), lecture-note-processor, <code>/enrich-person</code>.</li>
+      <li>Not built: transcript routing (<code>/route-transcript</code> Path A lecture / Path B meeting), the meeting-note → person-card append, the idea pipeline redesign.</li>
+    </ul>
+  </div></div>
+
+  <div class="stage"><div class="sn">Stage 3<small>not built</small></div><div>
+    <b>Surface <span class="pill planned">The biggest gap</span></b>
+    <ul>
+      <li>Spike ONE MOC end-to-end first (the plan's explicit advice) to validate Bases syntax against the new fields.</li>
+      <li>Write and test the backfill script: folder → <code>areas</code>/<code>efforts</code>/<code>Up:</code> over the ~875-file back catalogue, additive only.</li>
+      <li>Build the 38 MOC pages: Map root, 9 area pages, 5 effort pages, convert 10 landing pages to queries, wire 11 entity/type pages, plus Unfiled (the orphan detector that must stay empty) and Drafts &amp; Stale.</li>
+    </ul>
+  </div></div>
+
+  <div class="stage"><div class="sn">Stage 4a<small>live</small></div><div>
+    <b>Think <span class="pill live">Live</span></b>
+    <ul><li>5 consultants, /orchestrate, /panel, connection pages, syntheses. The plan calls this "your edge" and it's already real.</li></ul>
+  </div></div>
+
+  <div class="stage"><div class="sn">Stage 4b<small>deferred</small></div><div>
+    <b>Act (the Butler) <span class="pill planned">Deferred lane</span></b>
+    <ul><li>Freddie-style graduated automation: daily urgency re-score, draft eval-loop, dispatcher with one-tap approvals (his Telegram pattern). Deliberately parked until Surface exists.</li></ul>
+  </div></div>
+
+  <div class="stage"><div class="sn">Stage 5<small>deferred</small></div><div>
+    <b>Scale</b>
+    <ul><li>Vectorisation, voice-first interaction. Not started, correctly.</li></ul>
+  </div></div>
+
+  <h3>The near-term punch list</h3>
+  <p class="sub">Concrete, small, and mostly found by this audit rather than written in any plan.</p>
+  <div class="punch"><ol>
+    <li><b>Watch mail-triage's first headless run</b> (next AM slot, 08:00). It has only ever run supervised. Verify the watermark advances and the digest lands.</li>
+    <li><b>Fix the FT fetcher</b>: 6 consecutive failures on 10 June ("body too short, selector may have changed"); problem-seek is papering over it with metadata stubs.</li>
+    <li><b>Make the briefing log real</b>: the plist points at <code>briefing.log</code> but the wrapper never writes it, so a failed headless run leaves no trail.</li>
+    <li><b>Install the content-scan launchd job</b>: the plist sits in <code>~/scripts/content-scan/</code> but was never copied to LaunchAgents, so the monthly scan has never auto-run.</li>
+    <li><b>Update the iOS shortcut</b> to append to <code>incoming.md</code> instead of the legacy name.</li>
+    <li><b>Ratify the schema and spike one MOC</b> (Stage 0 + the Stage 3 spike). The plan's own priority call, and it unblocks the 13-step build checklist.</li>
+    <li><b>Design the idea pipeline</b>: 15 ideas sit in the inbox, the central Ideas folder is empty, and three separate idea silos exist. Parked "pending Isabella's idea-pipeline design", i.e. you.</li>
+    <li><b>Clear the lecture backlog</b>: 48 lecture notes still on Summary placeholders.</li>
+    <li><b>Retire or absorb <code>lecture_mover.sh</code></b>: a stray script in the home directory polling every 30 seconds, duplicating voice-pipeline stage 1.</li>
+    <li><b>CRM v1</b>: last_contact auto-update from email + follow-up surfacing in /triage. Email scanner now exists, so its main dependency is met.</li>
+  </ol></div>
 </section>
 
-<section>
-  <h2>How tagging works</h2>
-  <p class="sub">Three kinds of metadata, three different mechanisms. This is what makes the queries possible.</p>
-  <div class="grid g3">
-    <div class="card"><h3 style="margin-top:0">Entity &rarr; link</h3><p class="muted" style="font-size:14px">People, companies, concepts &mdash; things with their own note. Stored as <code>[[wikilinks]]</code>. Gives backlinks + graph + one canonical record.</p></div>
-    <div class="card"><h3 style="margin-top:0">Attribute &rarr; field</h3><p class="muted" style="font-size:14px">Date, type, status, area, interest, duration &mdash; values that describe the note. Stored as frontmatter fields. Sorted/filtered in Bases.</p></div>
-    <div class="card"><h3 style="margin-top:0">Keyword &rarr; tag</h3><p class="muted" style="font-size:14px">Genuine loose keywords + provenance (<code>voice-transcript</code>). Tags stop being the dumping ground for everything.</p></div>
+<!-- ============ SKILLS VIEW ============ -->
+<section class="view" id="view-skills">
+  <h2>Skills audit</h2>
+  <p class="sub">All 35 slash skills, grouped by the system they serve. Maturity is an honest read of each SKILL.md plus its referenced code: <b>polished</b> (battle-tested, scheduled or heavily used), <b>working</b> (does the job), <b>rough</b> (works with caveats), <b>draft</b> (new, unproven).</p>
+  <div class="filterbar" id="skillfilter">
+    <button class="fbtn active" data-f="all">All</button>
+    <button class="fbtn" data-f="tasks">Tasks</button>
+    <button class="fbtn" data-f="content">Content</button>
+    <button class="fbtn" data-f="email">Email &amp; Briefing</button>
+    <button class="fbtn" data-f="insead">INSEAD</button>
+    <button class="fbtn" data-f="output">Output</button>
+    <button class="fbtn" data-f="maint">Maintenance</button>
+    <button class="fbtn" data-f="think">Thinking</button>
+    <button class="fbtn" data-f="people">People</button>
   </div>
-  <h3>The controlled vocabularies (closed lists, never free-form)</h3>
-  <p><b>Areas:</b>
-    <span class="tag">insead-classwork</span><span class="tag">insead-other</span><span class="tag">ai-workflow</span><span class="tag">startups</span><span class="tag">career</span><span class="tag">networking</span><span class="tag">personal-social</span><span class="tag">creative-ideas</span><span class="tag">other</span>
-  </p>
-  <p><b>Interests:</b> <span class="tag">ai</span><span class="tag">consciousness</span><span class="tag">rationality-cognitive-science</span><span class="tag">economics</span></p>
-  <div class="note">Rule of thumb: does this thing have its own note? Yes &rarr; link it. No, it describes the note &rarr; field. Only loose keywords &rarr; tag.</div>
+  <div class="scrolltable"><table id="skilltable">
+    <tr><th>Skill</th><th>What it does</th><th>Calls</th><th>Maturity</th></tr>
+    <tr data-g="tasks"><td><code>/task</code></td><td>Capture tasks and projects with v2 scoring (urgency × importance), pre-scoring lookups against calendar and Canvas</td><td>calendar MCP, Canvas state</td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="tasks"><td><code>/triage</code></td><td>Morning ritual: sync transcripts, enrich and merge inbox items, file clippings, surface the day, archive cleanup</td><td>background agents, Bases, mail MCP</td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="tasks"><td><code>/daily-tasks</code></td><td>Interactive review of open items, drafts messages, marks done</td><td>Bases queries</td><td><span class="pill live">Working</span></td></tr>
+    <tr data-g="tasks"><td><code>/create-project</code></td><td>Adds a project to an area page with its Bases query, updates config</td><td>vault writes</td><td><span class="pill live">Working</span></td></tr>
+    <tr data-g="tasks"><td><code>/tdorganise</code></td><td>Resets the three task dashboards to standard v2 configuration</td><td>Bases</td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="tasks"><td><code>/do</code></td><td>Structured execution framework (observe → think → plan → build → execute → verify → learn), adopted from Freddie</td><td>varies</td><td><span class="pill live">Working</span></td></tr>
+    <tr data-g="content"><td><code>/process</code></td><td>Unified content ingestion: URL / file / sweep / paste, 11 fetchers, Tier 2 fallback, auto landing pages. Replaced /process-link + /triage-content</td><td><code>content-ingestion/cli.py</code></td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="content"><td><code>/resource</code></td><td>Lightweight save-for-later capture into the task inbox</td><td>vault writes</td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="content"><td><code>/idea</code></td><td>Lightweight idea capture into the task inbox</td><td>vault writes</td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="content"><td><code>/process-resource</code></td><td>Stage 2: turn a captured resource into a full vault note</td><td>WebFetch, PyPDF2</td><td><span class="pill live">Working</span></td></tr>
+    <tr data-g="content"><td><code>/process-idea</code></td><td>Stage 2: enrich and file a captured idea</td><td>vault writes</td><td><span class="pill partial">Working, barely used</span></td></tr>
+    <tr data-g="content"><td><code>/auth-fetcher</code></td><td>One-time login for paywalled sources (FT, Economist, Substack); cookies into Keychain</td><td><code>auth_login.py</code></td><td><span class="pill live">Working</span></td></tr>
+    <tr data-g="content"><td><code>/connections</code></td><td>Derives the Connections section for a note (4-step scan, reciprocals), enforced by a PostToolUse hook</td><td><code>connections-hook</code></td><td><span class="pill live">Working</span></td></tr>
+    <tr data-g="email"><td><code>/mail-triage</code></td><td>Twice-daily mailbox sweep: classify via seed lists + judgement, file, draft replies (never sends), digest email</td><td>MS365 MCP (scoped), seed lists</td><td><span class="pill partial">Day one</span></td></tr>
+    <tr data-g="email"><td><code>/briefing</code></td><td>Daily news briefing: corpus refresh, RSS discovery, 8-fetch summarisation, one note + one email</td><td><code>discover.py</code>, content-scan, MS365</td><td><span class="pill live">Working, 2 days old</span></td></tr>
+    <tr data-g="insead"><td><code>/lecture-note-processor</code></td><td>Slides + transcript → structured lecture note with summary, detail, wikilinks</td><td>vault writes</td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="insead"><td><code>/canvas-sync</code></td><td>INSEAD Canvas → vault Sources folders, auto-login, assignments</td><td>Playwright</td><td><span class="pill live">Working</span></td></tr>
+    <tr data-g="insead"><td><code>/course-page</code></td><td>Course folder → gated HTML knowledge site with eval gates</td><td>GitHub Pages repo</td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="insead"><td><code>/pdf-revision-notes</code></td><td>Lecture markdown → polished multi-page revision PDF</td><td>fpdf2, matplotlib</td><td><span class="pill live">Working</span></td></tr>
+    <tr data-g="insead"><td><code>/mark</code></td><td>Marks handwritten exercise answers on PDF, verifies the maths, annotates</td><td>pymupdf, scipy</td><td><span class="pill live">Working</span></td></tr>
+    <tr data-g="insead"><td><code>/strip-permissions</code></td><td>Removes PDF edit restrictions for iPad annotation</td><td>PyPDF2</td><td><span class="pill partial">Rough</span></td></tr>
+    <tr data-g="output"><td><code>/render-det</code></td><td>Deterministic house-style document (explainer / brief / report) → PDF or HTML. Vendored from Dad</td><td>render.py, token layer</td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="output"><td><code>/render-gen</code></td><td>Eval-driven generative posters and decks; successor to /onepager</td><td>shotgun + judge loop</td><td><span class="pill planned">Draft</span></td></tr>
+    <tr data-g="output"><td><code>/onepager</code></td><td>Eval-driven poster generation (plan → evals → shotgun → teardown → gate)</td><td>check.py graders</td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="output"><td><code>/backengineer</code></td><td>Eval-driven writing via spec-first generation and rubric iteration</td><td>spec + editor subagents</td><td><span class="pill live">Working</span></td></tr>
+    <tr data-g="output"><td><code>/evaluate</code></td><td>Two-agent design loop: fresh evaluator scores via browser, never sees code. Copied from Freddie</td><td>Chrome MCP</td><td><span class="pill live">Working</span></td></tr>
+    <tr data-g="output"><td><code>/vibecode</code></td><td>Prompt → repo → deployed site (GitHub Pages or Vercel)</td><td>gh CLI</td><td><span class="pill live">Working</span></td></tr>
+    <tr data-g="maint"><td><code>/update</code></td><td>Vault maintenance: metadata lint, cross-refs, lecture sources, wikilinks, meta drift. Currently in lightweight mode pending the metadata redo</td><td>parallel agents</td><td><span class="pill partial">Holding pattern</span></td></tr>
+    <tr data-g="maint"><td><code>/open</code></td><td>Opens a vault note in the Obsidian desktop app</td><td>vault ID URI</td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="maint"><td><code>/writing-style</code></td><td>Reads exemplar notes before generating anything in Isabella's voice</td><td>vault grep</td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="think"><td><code>/consultant</code></td><td>Dispatch to a named corpus-grounded consultant (lesswrong, ai-builder, ob, nego, gp)</td><td><code>.claude/agents/</code></td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="think"><td><code>/orchestrate</code></td><td>Multi-consultant debate with blind critique rounds and a synthesis that preserves disagreement</td><td>parallel consultants</td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="think"><td><code>/panel</code></td><td>Map-reduce over consultant lenses for build/research deliverables; the generative sibling of /orchestrate</td><td>parallel consultants</td><td><span class="pill live">Polished</span></td></tr>
+    <tr data-g="people"><td><code>/enrich-person</code></td><td>5 parallel scans (vault, CV book, web, LinkedIn, email) synthesised append-only into a person note</td><td>MS365, WebFetch, PyPDF2</td><td><span class="pill live">Working, lightly used</span></td></tr>
+    <tr data-g="people"><td><code>/meeting-notes</code></td><td>Transcript → structured meeting note (attendees, decisions, actions)</td><td>vault writes</td><td><span class="pill partial">Working, not wired in</span></td></tr>
+  </table></div>
+  <div class="note">Overlap worth watching: <code>/onepager</code> vs <code>/render-gen</code> (the latter is the declared successor; retire /onepager once render-gen's deck output is production-tested). Everything else that looks duplicated is intentional two-stage design (capture skill → processing skill).</div>
 </section>
 
-<section>
-  <h2>What's running right now</h2>
-  <p class="sub">The honest status board.</p>
-  <table>
-    <tr><th>System</th><th>Status</th><th>Notes</th></tr>
-    <tr><td>Voice transcription pipeline</td><td><span class="pill live">Live</span></td><td>JPR &rarr; AssemblyAI &rarr; Claude &rarr; review viewer &rarr; vault inbox</td></tr>
-    <tr><td>Voice review viewer</td><td><span class="pill live">Live</span></td><td>Local web app to glance, edit speakers, approve</td></tr>
-    <tr><td>Content Library + dashboard</td><td><span class="pill live">Live</span></td><td>Flat, metadata-first, Bases views</td></tr>
-    <tr><td>Task system + daily triage</td><td><span class="pill live">Live</span></td><td>Capture &rarr; triage &rarr; surface</td></tr>
-    <tr><td>Canvas sync</td><td><span class="pill partial">Live (last run errored)</span></td><td>Pulls INSEAD materials daily</td></tr>
-    <tr><td>Content ingestion (<code>/process-link</code>, <code>/triage-content</code>)</td><td><span class="pill down">Down</span></td><td>Missing <code>pymupdf4llm</code> dependency</td></tr>
-    <tr><td>Meeting-notes routing</td><td><span class="pill planned">Planned</span></td><td>Designed; not yet built</td></tr>
-    <tr><td>Flat metadata redo (vault-wide)</td><td><span class="pill planned">Planned</span></td><td>Forward-compatible; applied to new content first, no mass migration</td></tr>
-  </table>
+<!-- ============ SCRIPTS & JOBS VIEW ============ -->
+<section class="view" id="view-scripts">
+  <h2>Scripts, launchd jobs &amp; hooks</h2>
+  <p class="sub">Everything scheduled or hooked on the Mac, verified against the actual plists and log files on 10 June 2026. Convention: all automation lives in <code>~/scripts/</code>, one folder per launchd label. Exceptions are called out at the bottom.</p>
+
+  <h3>The 14 launchd jobs</h3>
+  <div class="scrolltable"><table>
+    <tr><th>Job</th><th>Schedule</th><th>What it does</th><th>Last evidence</th><th>Status</th></tr>
+    <tr><td><code>daily-triage</code></td><td>first poll each day (30-min poll)</td><td>Runs /triage headlessly: the morning ritual</td><td>10 Jun 10:48</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td><code>briefing</code></td><td>first poll after 07:00 daily</td><td>Runs /briefing: news scan → note + email</td><td>10 Jun (marker set)</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td><code>mail-triage</code></td><td>twice daily (AM + PM slots)</td><td>Runs /mail-triage with scoped permissions: no third-party send possible</td><td>10 Jun 22:39 (first run, supervised)</td><td><span class="pill partial">Day one</span></td></tr>
+    <tr><td><code>process-content</code></td><td>every 10 min, 08:00–23:00, gated</td><td>Sweeps the content inbox through /process; zero tokens when empty</td><td>10 Jun 20:49</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td><code>canvas-sync</code></td><td>daily 07:00</td><td>Playwright sync of INSEAD Canvas materials + assignments</td><td>10 Jun 07:32</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td><code>sync-transcripts</code></td><td>every 10 min</td><td>Lecture audio: iCloud → staging → Google Drive → Gemini transcription → vault</td><td>10 Jun 23:02</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td><code>task-voice</code></td><td>every 10 min</td><td>Task voice notes: iCloud → Gemini → frontmattered inbox item</td><td>10 Jun 23:03</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td><code>inbox-rename</code></td><td>always on (fswatch)</td><td>Renames .txt → .md in the task inbox (iOS Shortcuts bug)</td><td>8 Jun 09:32</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td><code>update-nudge</code></td><td>every 2 hours</td><td>macOS notification if the /update log goes stale &gt;3 days</td><td>10 Jun 11:07 ("4 days old")</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td><code>backup-scripts</code></td><td>Sundays 03:00</td><td>Rsyncs ~/scripts/ to OneDrive</td><td>7 Jun 03:06</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td><code>caffeinate</code></td><td>always on</td><td>Keeps the Mac awake so everything above can run</td><td>running (PID)</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td><code>voice-transcription</code> <span class="muted">(net.isotta)</span></td><td>every 60s</td><td>Dad's shared pipeline: watches the JPR iCloud folder, transcribes</td><td>10 Jun 23:06</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td><code>voice-review-server</code> <span class="muted">(net.isotta)</span></td><td>always on, port 8080</td><td>Transcript review page, reachable from the phone via Tailscale</td><td>running (PID)</td><td><span class="pill live">Live</span></td></tr>
+    <tr><td><code>com.lectures.mover</code></td><td>every 30 seconds</td><td>Moves lecture audio iCloud → Google Drive. A stray: lives in the home directory and duplicates sync-transcripts stage 1</td><td>active</td><td><span class="pill partial">Stray</span></td></tr>
+  </table></div>
+
+  <h3>Hooks (run inside every Claude session)</h3>
+  <ul>
+    <li><b>PreToolUse</b> · <code>~/.claude/log-tool-use.sh</code> logs every tool call to a permissions log.</li>
+    <li><b>PostToolUse</b> · <code>~/scripts/connections-hook/check.sh</code> reminds on every vault Write that lacks a Connections section.</li>
+  </ul>
+
+  <h3>Script folders without a launchd job</h3>
+  <div class="scrolltable"><table>
+    <tr><th>Folder</th><th>Role</th></tr>
+    <tr><td><code>content-ingestion/</code></td><td>The fetcher library behind /process: 11 deterministic fetchers, router, enrichment lib. Called by skills, not scheduled itself</td></tr>
+    <tr><td><code>content-scan/</code></td><td>Monthly proactive discovery (Anthropic Docs / Engineering / PAI direct-write; Substack pipeline pending). <b>Plist written but never installed</b>, so it has only ever run manually</td></tr>
+    <tr><td><code>calibration/</code></td><td>Logs triage urgency/importance overrides for the future auto-recalibration phase (36 of the ~50 rows it needs)</td></tr>
+    <tr><td><code>connections-hook/</code></td><td>The PostToolUse hook above</td></tr>
+    <tr><td><code>lesswrong-pull/</code></td><td>One-time corpus pull for the lesswrong consultant; kept for re-pulls</td></tr>
+    <tr><td><code>elective-update/</code>, <code>extract-qualtrics/</code></td><td>Manual INSEAD utilities</td></tr>
+    <tr><td><code>backup/</code>, <code>staging/</code>, <code>archive/</code></td><td>Backup target, shared temp dir for the voice pipelines, retired Canvas scripts</td></tr>
+  </table></div>
+
+  <h3>Called out, as requested</h3>
+  <div class="warnnote">
+    <b>Scripts living outside ~/scripts and ~/projects:</b>
+    <ul>
+      <li><code>~/lecture_mover.sh</code> — home-directory stray behind <code>com.lectures.mover</code>, polling every 30s, redundant with the voice pipeline's stage 1. Retire it or fold it in.</li>
+      <li><code>~/claude/</code> — sparse checkout of Dad's claude-infrastructure repo. Two launchd jobs (JPR transcription + review server) depend on it. Fine, but it's an external dependency you don't control: his refactors can break your voice flow.</li>
+      <li><code>~/.claude/log-tool-use.sh</code> — hook script in the Claude config dir (reasonable home for it).</li>
+    </ul>
+  </div>
+  <div class="warnnote">
+    <b>Other infrastructure debt found in the logs:</b>
+    <ul>
+      <li>Briefing's log file is configured in the plist but never written by the wrapper: failed headless runs would be invisible.</li>
+      <li>iCloud ↔ Google Drive direct copies throw "Resource deadlock avoided" errors in both voice pipelines; the staging workaround exists but errors still appear in logs.</li>
+      <li>Three different Python installs in play (Framework 3.12, 3.13, CLT); several scripts hard-pin paths to dodge launchd's default PATH. Works, but brittle.</li>
+    </ul>
+  </div>
 </section>
 
-<footer>
-  <div class="wrap" style="padding:0">
-    A living map of how my vault works &mdash; capture cheap, enrich in the vault, let queries draw the connections. Updated as pieces come online.
-  </div>
-</footer>
+<!-- ============ METADATA VIEW ============ -->
+<section class="view" id="view-metadata">
+  <h2>Metadata: current vs proposed</h2>
+  <p class="sub">From <code>Vault Metadata - Current vs Proposed.xlsx</code> and the canon <code>Vault Restructure Plan.xlsx</code> (which wins all disagreements). The header on the sheet says it all: "PROPOSED (Freddie-adapted) — capture stays dumb, vault holds all metadata."</p>
+
+  <div class="note"><b>The rule of thumb (verbatim from the plan):</b> "Does this thing have (or deserve) its own note? YES → link it (entity). NO, it's a value describing the note → field (attribute). Only loose keywords → tag."</div>
+
+  <div class="scrolltable"><table>
+    <tr><th>Field</th><th>Change</th><th>What it becomes</th></tr>
+    <tr><td><code>title</code> <code>date_created</code> <code>date_modified</code> <code>type</code> <code>status</code> <code>source</code> <code>page_role</code></td><td><span class="pill live">Keep</span></td><td>Unchanged universal fields</td></tr>
+    <tr><td><code>tags</code></td><td><span class="pill partial">Demoted</span></td><td>Person-name tags, voice-transcript, genuine keywords only. The controlled axes move out to their own fields; tags stop being the dumping ground</td></tr>
+    <tr><td><code>areas</code></td><td><span class="pill planned">New</span></td><td>Life-domain axis, vault-wide, multi-value: the to-do system's area vocabulary promoted to every note. Primary dashboard facet</td></tr>
+    <tr><td><code>efforts</code></td><td><span class="pill planned">New</span></td><td>Bounded pushes that cut across areas: Signal Internship, SSUP, AI Club, AI Workflow, INSEAD</td></tr>
+    <tr><td><code>people</code></td><td><span class="pill planned">New</span></td><td>Wikilinks to People notes: the entity axis that powers the CRM and Related queries</td></tr>
+    <tr><td><code>related</code></td><td><span class="pill planned">New</span></td><td>Wikilinks to companies / projects / concepts for graph + backlinks</td></tr>
+    <tr><td><code>description</code></td><td><span class="pill planned">New</span></td><td>One-liner for dashboards, distinct from the body Summary</td></tr>
+    <tr><td><code>interests</code> <code>themes</code></td><td><span class="pill live">Keep</span></td><td>Intellectual axis (4 values) and creative axis (11, creative-only), unchanged</td></tr>
+    <tr><td><code>content_format</code></td><td><span class="pill partial">Extended</span></td><td>Adds meeting, talk, call, workshop, 1-1, interview: absorbs the "category" idea</td></tr>
+    <tr><td><code>audio</code> <code>enriched_data</code> <code>recorder</code> <code>duration_mins</code></td><td><span class="pill planned">New (voice)</span></td><td>Voice-origin fields, matching Dad's pipeline assets</td></tr>
+    <tr><td><code>actions</code></td><td><span class="pill planned">Optional</span></td><td>Open follow-ups per note; the future feed into the Task System</td></tr>
+  </table></div>
+
+  <div class="note"><b>The one big exception:</b> INSEAD stays folder-structured (subject/lecture fields + Sources/L##). The flat scheme is the go-forward default for everything non-INSEAD, with no mass migration: the ~875-file back catalogue gets an additive backfill (folder → areas/efforts/Up:), and evolves opportunistically.</div>
+
+  <h3>The 38 MOC pages (0 built)</h3>
+  <p class="sub">Every page hangs off a single <code>Map 🌎</code> root via an <code>Up:</code> chain. NEW = build from scratch, CONVERT = existing landing page swaps its manual list for a query, WIRE = existing page gets linked in.</p>
+  <div class="scrolltable"><table>
+    <tr><th>Axis</th><th>Pages</th><th>Mode</th></tr>
+    <tr><td>Root</td><td>Map 🌎 — "every Up: chain ends here"</td><td><span class="pill planned">New</span></td></tr>
+    <tr><td>Areas (9)</td><td>Career · Entrepreneurship · Strategy &amp; Consulting · PE · Applications · Admin · OC&amp;C · Cambridge · Creative</td><td><span class="pill planned">New</span></td></tr>
+    <tr><td>Interests (4)</td><td>AI · Economics · Rationality &amp; Cog Sci · Consciousness</td><td><span class="pill partial">Convert</span></td></tr>
+    <tr><td>Efforts (5)</td><td>Signal Internship · SSUP · AI Club · AI Workflow · INSEAD</td><td><span class="pill planned">New</span></td></tr>
+    <tr><td>Themes (6)</td><td>Escapism · Man-Beast · Consciousness &amp; Perception · Romanticism vs Rationality · Counterculture · Imagination</td><td><span class="pill partial">Convert</span></td></tr>
+    <tr><td>Entities (5)</td><td>People · Companies · Books · Films · Cultural Figures</td><td><span class="pill partial">Wire</span></td></tr>
+    <tr><td>Types (6)</td><td>Content Library · Essays · Syntheses &amp; Connections · Meetings &amp; Talks · Ideas · Tasks</td><td><span class="pill partial">Mixed</span></td></tr>
+    <tr><td>Admin (2)</td><td><b>Unfiled</b> (orphan detector, "MUST stay empty — completeness proof") · Drafts &amp; Stale</td><td><span class="pill planned">New</span></td></tr>
+  </table></div>
+
+  <h3>What's blocking it</h3>
+  <ul>
+    <li><b>Gap 1 (high):</b> <code>area</code> (single value, task system) vs <code>areas</code> (list, vault-wide) not reconciled. Your call.</li>
+    <li><b>Gap 3 (high):</b> entities as wikilinks vs tags not decided. Your call; the synthesis docs recommend wikilinks.</li>
+    <li><b>Gap 4 (high):</b> the backfill script is unwritten.</li>
+    <li><b>Gap 6 (high):</b> Bases syntax against list-fields never validated: spike one MOC before building 38.</li>
+    <li>Plus 11 medium/low gaps: templates not updated, one-inbox-or-two, enum finalisation, iCloud bulk-edit risk, and the 13-step build checklist with nothing yet checked off.</li>
+  </ul>
+</section>
+
+<!-- ============ FREDDIE VIEW ============ -->
+<section class="view" id="view-freddie">
+  <h2>Freddie's playbook, mapped to mine</h2>
+  <p class="sub">Everything documented about Freddie's system in the Content Library (11 explainer notes), lined up against the equivalent piece here. The pattern: where his components have already been copied they work; the two biggest uncopied pieces are the automatic person-card update and the ticketing/approval layer.</p>
+
+  <div class="scrolltable"><table>
+    <tr><th>Freddie's component</th><th>How his works</th><th>My equivalent</th><th>Status</th></tr>
+    <tr><td>Metadata-first flat filing</td><td>Two flat folders + ~25-topic controlled vocabulary + entity tags; "I don't file into folders, I file into metadata, and a saved query does the cross-referencing forever"</td><td>Content Library does exactly this today; the Vault Restructure Plan extends it vault-wide ("Freddie-adapted" is literally the sheet header)</td><td><span class="pill partial">Partial</span></td></tr>
+    <tr><td>The /transcript pass</td><td>Five sub-steps: lock speaker identity via dispositive quotes → load relationship history → write synthesis note → backfill raw transcript metadata → <b>update the person's card</b> (last_contact, strength, log row)</td><td>Voice Transcript Routing plan (Path B) specs this; none of it is built. /enrich-person borrows the multi-source synthesis pattern but runs on demand, not on every conversation</td><td><span class="pill planned">Planned</span></td></tr>
+    <tr><td>Live Related query</td><td>Bases block on every note scoring all others: +3 shared author, +2 per shared entity, +1 per shared topic. No manual cross-linking, ever</td><td>/connections does this manually with a hook enforcing it. The plan's open question D6: does /connections survive once live queries exist?</td><td><span class="pill partial">Manual version live</span></td></tr>
+    <tr><td>Task system</td><td>Capture → triage → surface with the keen/park states, complete-picture triage</td><td>Task System v2 was explicitly "Based on Freddie's Task System" and has since grown its own scoring model. Done</td><td><span class="pill live">Copied &amp; evolved</span></td></tr>
+    <tr><td>Lecture pipeline (V8)</td><td>PDF → images → parallel sub-agents write polished sections directly (one-hop synthesis) → minimal stitch</td><td>lecture-note-processor + canvas-sync cover the same ground via a different route (transcripts + slides)</td><td><span class="pill live">Equivalent exists</span></td></tr>
+    <tr><td>Canvas sync</td><td>/insead-prep: calendar check → Playwright → Canvas REST → study notes</td><td>canvas-sync runs daily at 07:00. Done</td><td><span class="pill live">Copied</span></td></tr>
+    <tr><td>Evaluate skill</td><td>Generator ↔ fresh evaluator with no memory, browser-only judgement, calibration anchors, refine-vs-pivot rule</td><td>/evaluate is a direct port; /onepager and /render-gen extend the idea</td><td><span class="pill live">Copied</span></td></tr>
+    <tr><td>Automation framework</td><td>OBSERVE → THINK → PLAN → BUILD → EXECUTE → VERIFY → LEARN</td><td>/do is a direct port</td><td><span class="pill live">Copied</span></td></tr>
+    <tr><td>Voice pipeline</td><td>Dropbox → Make.com → AWS Transcribe → GPT → Obsidian + email (~£20/month)</td><td>Different stack, same shape: iCloud → Gemini → vault, plus Dad's JPR pipeline. Live</td><td><span class="pill live">Own version</span></td></tr>
+    <tr><td>Ticketing / butler</td><td>Every workflow split into a safe preparatory tail (auto: research, drafts, calendar reads) and an irreversible head (one Telegram approval tap: send, pay, book). 60 seconds capture-to-draft</td><td>Mail-triage's draft-but-never-send is the first slice of this. The dispatcher, ticket store and one-tap approvals are the deferred Stage 4b lane</td><td><span class="pill planned">Planned</span></td></tr>
+  </table></div>
+
+  <h3>The ideas most worth stealing next (in order)</h3>
+  <ol>
+    <li><b>The person-card append on every interaction.</b> This is the heart of "Freddie's CRM is super automatic": his /transcript pass updates the People card as a side effect of processing any conversation. Your equivalent hooks exist (transcripts flow in, mail-triage reads mail, person notes have the fields); nothing joins them yet. It is the single highest-leverage uncopied mechanic.</li>
+    <li><b>The live Related query</b> replacing manual Connections for the long tail (decision D6). Needs the new metadata fields, so it lands with Stage 3.</li>
+    <li><b>Ticketing's auto/approval split</b>, starting cheap: extend mail-triage's pattern (do everything reversible, queue the irreversible) to other flows before building any Telegram dispatcher.</li>
+  </ol>
+
+  <h3>Dad's infrastructure, for contrast</h3>
+  <p class="small muted">Matthew's system is the other reference point: custom MCP servers (OneNote 40 tools, MS365 100+ tools across 18 instances, which you already use), a git-tracked modular repo (capture / pipeline / surface chunks), and the shared voice-transcription pipeline that two of your launchd jobs run from a sparse checkout of. You consume his infrastructure; you copy Freddie's patterns. That division has worked: keep it deliberate.</p>
+</section>
 
 </div>
+
+<footer><div class="wrap" style="padding:0">Built with Claude Code · full-system audit 2026-06-10 · supersedes the late-May explainer that previously lived at this URL. Sources: <code>~/scripts/</code> logs, launchd plists, SKILL.md files, <code>Vault Restructure Plan.xlsx</code> and the Workflow plan docs.</div></footer>
+
+<script>
+const P = {live:'<span class="pill live">Live</span>', partial:'<span class="pill partial">Partial</span>', planned:'<span class="pill planned">Planned</span>', down:'<span class="pill down">Broken</span>'};
+
+const SYSTEMS = {
+
+"task-system": {
+  name:"Task System", status:"live", meta:"v2 · live since March, scoring model since April · plan: 3. Task System v2 - Plan.md",
+  what:"The capture → triage → surface pipeline for everything to do. Items land in one inbox (typed task / project / idea / resource), get scored priority = urgency × importance, triaged every morning, and surfaced on three Bases dashboards plus per-area pages with projects as sections.",
+  now:[
+    "161 active inbox items, 203 archived; Tasks / Ideas / Resources dashboards all live",
+    "Capture from anywhere: /task, /idea, /resource, voice notes (10-min pipeline), iOS shortcut, with a watcher fixing the .txt extension bug",
+    "Daily auto-triage runs headlessly on the first wake of each day (verified 10 Jun, 10:48)",
+    "Today's Focus auto-pick, /create-project, Standalone-bucket fix all shipped; keen/someday states retired June",
+    "Calibration log quietly accumulating override data: 36 rows of the ~50 needed"
+  ],
+  target:[
+    "Much more autonomous: tasks score, schedule and resurface themselves with you only making the calls",
+    "Phase 5c: auto-recalibration of the scoring weights from your override history",
+    "Phase 6: calendar integration, so deadlines and free slots drive the day plan",
+    "Phase 7: Thought Log, absorbing the idea-capture stream",
+    "Stage 4b: daily urgency re-score + the dispatcher (the Butler) acting on tasks, not just listing them"
+  ],
+  gap:[
+    "Keep accruing calibration rows; flip Phase 5c on at ~50 (passive, nearly there)",
+    "Unblock Phase 6: it is blocked on INSEAD calendar forwarding, an admin job not a build job",
+    "Phase 7 is deliberately deferred until the flat-vault migration; leave it",
+    "Autonomy beyond that is the Butler lane: build Surface (Stage 3) first so the dispatcher has something to read"
+  ],
+  links:["ideas","mail","voice","butler","infra"],
+  sources:["_Inbox/To Do System/Config/Task System Config.md","4. AI Learning/Workflow/3. Task System v2 - Plan.md","~/scripts/daily-triage/","~/scripts/task-voice/"]
+},
+
+"content-ingestion": {
+  name:"Content Ingestion", status:"live", meta:"merged into /process 30 May · scheduled sweep live since May",
+  what:"The pipeline that turns anything you consume (URL, PDF, podcast, video, pasted text, phone share) into a properly-filed Content Library note: deterministic fetch → enrichment → evaluation → note with metadata, Connections, and the verbatim source preserved.",
+  now:[
+    "/process handles four modes (URL / file / sweep / paste); 11 deterministic fetchers + a Tier 2 subagent fallback + problem-seek stubs when all else fails",
+    "Scheduled sweep every 10 minutes (08:00–23:00), zero-token when the inbox is empty; last ran 10 Jun 20:49",
+    "Phone shortcut → incoming.md → swept automatically; journal logs every action",
+    "Landing pages auto-created at 3+ items per channel and auto-added to the hub"
+  ],
+  target:[
+    "Every consumption channel covered: the deferred fetchers (LinkedIn, Twitter threads, Kindle highlights, images) built as needed",
+    "Pipeline mode for content-scan, so monthly discovery feeds the same enrichment path instead of bypassing it",
+    "Outputs carrying the new metadata schema (areas, people, related, description) once Stage 0 ratifies it"
+  ],
+  gap:[
+    "Fix the FT fetcher: 6 consecutive failures on 10 Jun (selector change); until then FT items become metadata-only stubs",
+    "Update the iOS shortcut to the incoming.md name (legacy fallback currently carrying it)",
+    "Wire content-scan's Substack sources into pipeline mode (discovered 39 items it couldn't write)",
+    "When the schema lands, update the enrichment step's frontmatter template once: every future note then files itself into the MOC system"
+  ],
+  links:["content-library","briefing","restructure"],
+  sources:["~/scripts/content-ingestion/","~/scripts/process-content/","_Setup/Skills/process/","4. AI Learning/Workflow/11. Content Library Plan.md"]
+},
+
+"content-library": {
+  name:"Content Library", status:"live", meta:"851 notes · 30 landing pages · the proof the flat model works",
+  what:"One flat folder of everything third-party you've consumed, organised entirely by metadata (content_format, source_outlet, interests, tags) and surfaced through a Bases hub with landing pages per interest, theme and channel. This is the working prototype of the whole flat-vault philosophy.",
+  now:[
+    "851 notes in one flat folder; 30 landing pages; hub with All / Recent / By format / By outlet / By topic views",
+    "Hub organised on a single MECE topic axis: interests, themes, and channel groups",
+    "Every note carries a Connections section, enforced by the PostToolUse hook",
+    "Briefings live in their own subfolder, written daily by /briefing and /mail-triage"
+  ],
+  target:[
+    "Becomes '12 External Content Library' in the restructure, unchanged in spirit: it already is the end state",
+    "Its landing pages convert from manual lists to live Bases queries (10 of the 38 MOCs)",
+    "Phase 4 of its own plan: sweep stray content from elsewhere in the vault (Career talks, INSEAD Other Talks) into the library"
+  ],
+  gap:[
+    "Nothing structural: this system is the template. The work is the conversion of landing pages to queries, which lands with Stage 3",
+    "Decide the open fields (read_status, notes_depth) as part of schema ratification rather than separately"
+  ],
+  links:["content-ingestion","restructure","briefing"],
+  sources:["Content Library/_Content Library.md","Content Library/Content Library.base","4. AI Learning/Workflow/11. Content Library Plan.md"]
+},
+
+"voice": {
+  name:"Voice & Transcripts", status:"partial", meta:"three pipelines live · routing layer designed 27 May, unbuilt",
+  what:"Three separate audio pipelines: lecture recordings (iCloud → Google Drive → Gemini → vault Sources), task voice notes (iCloud → Gemini → inbox item), and Dad's JPR pipeline (60-second watcher → transcription → review page on port 8080, reachable from your phone). What's missing is the layer after transcription: deciding what a transcript IS and filing it accordingly.",
+  now:[
+    "All three pipelines verified running on 10 Jun (23:02, 23:03, 23:06 respectively)",
+    "Review server live for correcting speakers and approving transcripts",
+    "Non-lecture transcripts accumulate in _Inbox/Other Transcripts/ (5 currently) waiting for manual handling",
+    "Known bug from May: Whisper-style transcript loops can silently eat the tail of a recording; spot-check long ones"
+  ],
+  target:[
+    "/route-transcript: a sweep that classifies each transcript: Path A lecture → calendar-matched into Sources/L## and processed; Path B meeting/talk → a meeting note with the full new metadata (people, areas, recorder, audio link) and the transcript in the body",
+    "Path B is explicitly the prototype of the new metadata model applied to one content type",
+    "Merge-recordings and speaker-rename propagation requested as features on Dad's shared pipeline"
+  ],
+  gap:[
+    "Build /route-transcript P0: the classification sweep (the plan has phases P0–P3 fully specced, none built)",
+    "Decide the 5 open questions in the routing plan: where meeting notes live, where audio assets live, how new fields get registered",
+    "Path B's person-card append is the same mechanic the CRM needs: build it once, both systems light up"
+  ],
+  links:["lectures","meetings","crm","restructure"],
+  sources:["4. AI Learning/Workflow/16. Voice Transcript Routing - Plan.md","~/scripts/voice-pipeline/","~/claude/scripts/voice-transcription/"]
+},
+
+"mail": {
+  name:"Email Scanner (mail-triage)", status:"partial", meta:"went live 10 June · one supervised run · headless unproven",
+  what:"Twice-daily sweep of the mailbox: pulls everything since the last watermark, classifies via seed lists plus judgement (needs-you / not-sure / orders / newsletters / promos / notifications / FYI), files and deletes the noise, drafts replies into Outlook Drafts (it cannot send to anyone but you: send tools are denied at the permission layer), and emails you a digest. You mark decisions on the digest; the next run applies them, so it learns senders over time.",
+  now:[
+    "First run 10 Jun PM, supervised: swept 31, filed 19, deleted 6, drafted 3, flagged 1 task",
+    "Permission scoping verified in the plist: reply/send/forward tools explicitly disallowed",
+    "Six seed lists seeded and already growing (one learned sender on day one)",
+    "Watermark + processed-ids backstop in place but the backstop is empty and untested"
+  ],
+  target:[
+    "Runs unattended twice a day and you stop reading noise entirely: only the digest and the drafts",
+    "Learned seed lists make the deterministic pre-filter catch most volume; judgement handles the rest",
+    "Feeds the CRM: every human email updates last_contact on the person note",
+    "Eventually the first arm of the Butler: the auto/approval split is already its design"
+  ],
+  gap:[
+    "Watch the first headless AM run (08:00) and the watermark; this is the single most important test",
+    "Exercise the untested paths: double-processing backstop, send-failure fallback, seed-list learning from your marks",
+    "Then wire the CRM hook: on processing mail from a known person, append to their note (small once /enrich-person's email-scan logic is reused)",
+    "The older 27-folder auto-filing design doc stays shelved; this skill superseded it"
+  ],
+  links:["crm","task-system","briefing","butler"],
+  sources:["~/scripts/mail-triage/","_Setup/Skills/mail-triage/SKILL.md","4. AI Learning/Workflow/10. Email Auto-Filing System.md"]
+},
+
+"canvas": {
+  name:"Canvas Sync", status:"live", meta:"daily 07:00 · Playwright · running since May",
+  what:"Pulls INSEAD Canvas materials (slides, readings, assignments) into the right Sources/L## folders every morning through an authenticated Playwright browser profile, with manifest state so nothing downloads twice.",
+  now:[
+    "Ran 10 Jun 07:32; assignment detection working (found 1 new/changed on 9 Jun)",
+    "Auto-login via saved session; --check-session repair flow documented",
+    "Feeds the lecture pipeline: new slides in Sources/L## trigger the rename-and-enrich automation"
+  ],
+  target:["Keeps running until graduation, then freezes with the INSEAD archive. No further build planned, correctly."],
+  gap:["None structural. Watch the stderr log occasionally: last exit code was nonzero on one run; the session can rot and need a re-login."],
+  links:["lectures"],
+  sources:["~/scripts/canvas-sync/canvas-sync-playwright.py","_Setup/Skills/canvas-sync/"]
+},
+
+"lectures": {
+  name:"Lecture Pipeline", status:"live", meta:"live all year · 48-note processing backlog",
+  what:"The full chain from sitting in class to revision material: record → audio pipeline → Gemini transcript → routed to the course's Sources/L## → lecture-note-processor writes the structured note → /pdf-revision-notes and /course-page produce revision PDFs and gated course sites.",
+  now:[
+    "Whole chain verified live; CFP has 14 complete notes and 90 source files as a healthy example",
+    "Course sites publishing to the INSEAD content library repo (P&M, MGE built)",
+    "48 lecture notes across courses still sit on Summary placeholders: transcripts/slides arrived but processing hasn't run",
+    "Known transcript-loop bug means long lectures deserve a spot-check during processing"
+  ],
+  target:[
+    "Zero-touch: materials arrive (Canvas or recording), notes enrich themselves, status flips to complete, /update only reports",
+    "This folder structure deliberately survives the flat-vault migration as the one exception"
+  ],
+  gap:[
+    "Burn down the 48-note backlog (a batch lecture-note-processor run, course by course)",
+    "Make the trigger proactive: CLAUDE.md already mandates auto-processing when sources land; the backlog shows it isn't actually happening: hook it to the canvas-sync/transcript-arrival events rather than waiting for /update to flag it"
+  ],
+  links:["canvas","voice","maintenance"],
+  sources:["_Setup/Skills/lecture-note-processor/","~/scripts/voice-pipeline/","2. INSEAD/Academics/"]
+},
+
+"ideas": {
+  name:"Idea System", status:"planned", meta:"capture live · processing fragmented · design pass owed",
+  what:"Today: ideas get captured fine (/idea, voice, 15 sitting in the inbox with an Ideas.base dashboard) but there is no real downstream. The designated Ideas folder is empty while idea-like content lives in three separate silos (Blog Ideas, Novel Ideas, Vault Connection Ideas), and /process-idea is barely used. Your own description, 'randomly chucking things in', matches the audit.",
+  now:[
+    "Capture: /idea + voice capture working; 15 active idea items, 6 archived",
+    "Ideas.base dashboard exists and renders",
+    "/process-idea exists (routes Creative vs Startup) but the empty target folder says it isn't being used",
+    "The plan docs call the idea pipeline 'half-wired' and the backlog 'parked pending Isabella's idea-pipeline design'"
+  ],
+  target:[
+    "One idea stream with a real lifecycle: capture → incubate → either becomes a project (Task System), a piece of writing (Creative), or a startup note: status tracked, nothing rots",
+    "Phase 7 Thought Log absorbs raw thinking; an Ideas MOC (one of the 38) surfaces everything by area",
+    "The silos either merge or become explicit types within one flat ideas collection"
+  ],
+  gap:[
+    "This needs YOUR design pass before any building: the one system where the blocker is a decision, not code",
+    "Decide: is an idea a task-system item that graduates, or a creative note from birth? (The plan flags this exact mapping as 'needs work')",
+    "Then: merge the silos, point /process-idea at the agreed shape, add the Ideas MOC at Stage 3"
+  ],
+  links:["task-system","restructure","consultants"],
+  sources:["_Inbox/To Do System/Ideas.base","4. AI Learning/Workflow/3. Task System v2 - Plan.md (Phase 7)","Creative & Interests/"]
+},
+
+"meetings": {
+  name:"Meeting Notes", status:"planned", meta:"skill exists · automatic flow designed, not built",
+  what:"The target is Freddie's signature move: a conversation gets recorded, and without you doing anything it becomes a synthesis note (key points, quotes, actions), updates every attendee's person card, and links itself to related projects. Today only the pieces exist: transcription works, /meeting-notes can process a transcript when invoked, but nothing connects them.",
+  now:[
+    "/meeting-notes skill processes a transcript into a structured note on demand",
+    "Transcripts arrive automatically (the voice pipelines) but sit unrouted",
+    "Meeting notes have no dedicated home or dashboard yet"
+  ],
+  target:[
+    "Path B of the transcript-routing plan: auto-classified meeting transcripts → meeting note with the new metadata (people, areas, recorder, audio, actions) → dedicated Base (by area / person / has-open-actions)",
+    "Person-card append per attendee (the CRM mechanic)",
+    "Actions feed the Task System",
+    "Becomes '11 Meeting Notes' in the restructure, with transcripts in Raw Filed"
+  ],
+  gap:[
+    "Same critical path as Voice: build /route-transcript P0, then the meeting-note writer is mostly the existing skill with new frontmatter",
+    "Decide where meeting notes live (open question 1 of the routing plan): the restructure answer is a flat folder, so build it flat from day one",
+    "Wire the actions → Task System hand-off last; it needs the actions field from the schema"
+  ],
+  links:["voice","crm","task-system","restructure"],
+  sources:["4. AI Learning/Workflow/16. Voice Transcript Routing - Plan.md","_Setup/Skills/meeting-notes/"]
+},
+
+"restructure": {
+  name:"Vault Restructure (the end-state)", status:"planned", meta:"canon: Vault Restructure Plan.xlsx, 3 June · Stage 0 not done · 0 of 38 MOCs built",
+  what:"The destination for the whole vault: numbered flat-ish folders (0 Map → 20 Health), metadata replacing folder hierarchy as the organising mechanism, 38 MOC dashboard pages hanging off a single Map root with an Up: chain, an Unfiled orphan detector that must stay empty, and INSEAD as the one deliberate folder-structured exception. The Excel is the single source of truth; seven synthesis docs orbit it.",
+  now:[
+    "Schema drafted (areas, efforts, people, related, description; tags demoted) but NOT ratified",
+    "38 MOCs specced with build modes (NEW / CONVERT / WIRE); none built",
+    "13-step build checklist written; nothing checked off",
+    "15 open gaps logged, 5 of them high (area-vs-areas, entity tags, backfill script, Up: chain, Bases syntax unvalidated)",
+    "No mass migration planned: additive backfill over the ~875-file back catalogue, new content adopts the schema from day one"
+  ],
+  target:[
+    "Any file reachable in ≤3 clicks from Map 🌎, four ways (down the MOCs, up the Up: chain, file explorer, Unfiled view)",
+    "Filing decided by metadata, not a category-to-folder lookup table",
+    "Live Related query on every note replacing manual cross-linking for the long tail",
+    "Capture stays dumb; the vault holds all the intelligence"
+  ],
+  gap:[
+    "Stage 0: sit down and ratify the schema, resolving the 3 decisions only you can make (area/areas, entity wikilinks vs tags, one inbox or two). One session with the Deviations tab",
+    "Spike ONE MOC end-to-end to validate Bases syntax against list fields before committing to 38",
+    "Write and dry-run the backfill script (additive, with the folder→area mapping table already drafted in the plan)",
+    "Then execute the 13-step checklist in order; the plan estimates the order, nothing else is blocking",
+    "You flagged this as the summer project ('do together, later'): the audit agrees nothing forces it earlier, but every new system (meetings, CRM, ideas) is waiting on the schema, so Stage 0 alone is worth pulling forward"
+  ],
+  links:["content-library","meetings","crm","ideas","maintenance"],
+  sources:["4. AI Learning/Workflow/Vault Restructure Plan.xlsx","4. AI Learning/Workflow/Vault Metadata - Current vs Proposed.xlsx","4. AI Learning/Workflow/Vault System - 00..07 (synthesis docs)"]
+},
+
+"briefing": {
+  name:"Daily Briefing", status:"live", meta:"live since 9 June · Sonnet-pinned for cost · 8-fetch cap",
+  what:"Every morning after 07:00: refreshes the Anthropic reference corpora, discovers fresh items from FT (AI / PE / World) and four Substacks, dedupes against everything already in the vault, summarises the top ~8 with full-text fetches and the rest from standfirsts, writes one briefing note and emails it to you. You reply 'process #N' to pull anything into the Content Library properly.",
+  now:[
+    "10 Jun edition verified: 20 items (6 AI / 4 PE / 5 current affairs / 5 Substacks), note written, email sent",
+    "Dedupe works across the corpus, the briefed-list and the ingestion queue",
+    "Corpus refresh found 20 new Anthropic docs + 1 engineering post on 10 Jun"
+  ],
+  target:[
+    "WSJ and NYT added (subscriptions exist; auth + feeds not configured): phase 2 in the feeds file",
+    "FT full-text instead of standfirsts (currently bot-blocked)",
+    "Feed-health alerting so a dead RSS feed doesn't silently thin the briefing"
+  ],
+  gap:[
+    "Add log redirection to the wrapper so headless failures leave a trail (the plist promises a log nothing writes)",
+    "Fix FT full-text (shared root cause with the ingestion FT fetcher)",
+    "Add WSJ/NYT auth via /auth-fetcher, then their feeds",
+    "Log which items got full-text vs standfirst, so the 8-fetch cap is observable before the usage review"
+  ],
+  links:["content-ingestion","mail","content-library"],
+  sources:["~/scripts/briefing/","_Setup/Skills/briefing/","~/scripts/content-scan/"]
+},
+
+"crm": {
+  name:"CRM / People", status:"partial", meta:"147 person notes · enrich skill built · active layer missing",
+  what:"The network database: 147 person notes with rich frontmatter (relationship, met_context, industry, last_contact), a People Overview hub, 14 company notes, and /enrich-person, which scans vault + CV book + web + LinkedIn + 360 days of email in parallel and synthesises append-only. What's missing is everything ACTIVE: notes only change when you ask. Nothing watches your interactions and updates cards the way Freddie's does.",
+  now:[
+    "Data layer healthy and big (the docs say 15 people; reality is 147: the system outgrew its own documentation)",
+    "/enrich-person works on demand, including last_contact from email scan",
+    "Templates, relationship taxonomy and the four industry People-in-Network pages all maintained",
+    "Your own CRM task defines v1 scope: follow-up surfacing, /prep-meeting, auto last_contact"
+  ],
+  target:[
+    "Freddie's mechanic: every interaction (email processed by mail-triage, meeting transcript routed, mention in a note) appends to the person's card automatically: log row, last_contact, relationship strength",
+    "Follow-up surfacing: people going quiet > N weeks appear in /triage and /daily-tasks",
+    "/prep-meeting briefing before any call, from person + company + recent vault activity",
+    "People MOC + people field on every note making the graph queryable"
+  ],
+  gap:[
+    "Build the append hook into mail-triage first (it already identifies senders; /enrich-person already has the email logic to reuse): cheapest win with the system that now exists",
+    "Add follow-up surfacing to /triage (a Bases query over last_contact is most of it)",
+    "/prep-meeting is a thin skill over /enrich-person's gather step: build it when recruiting season starts",
+    "The transcript-routed person-append lands with Meeting Notes Path B: one mechanic, two consumers",
+    "Explicitly out of v1, keep it out: LinkedIn automation, outreach drafting, graph viz"
+  ],
+  links:["mail","meetings","voice","task-system"],
+  sources:["People/People Overview.md","_Setup/Skills/enrich-person/SKILL.md","_Inbox/To Do System/Items/Build CRM system.md"]
+},
+
+"consultants": {
+  name:"Consultants & Orchestration", status:"live", meta:"5 consultants · 2 convening skills · the Think layer",
+  what:"Corpus-grounded consultants (lesswrong, ai-builder, ob, nego, gp) that cite their corpus verbatim, dispatched singly via /consultant, convened adversarially via /orchestrate (blind critique rounds, synthesis preserving disagreement) or generatively via /panel (map-reduce toward a deliverable). The layer the restructure plan calls 'your edge'.",
+  now:[
+    "All five consultants registered and working; syntheses filing to their own folder",
+    "Clear decision tree documented: one lens → consultant, clash → orchestrate, complement → panel"
+  ],
+  target:[
+    "More consultants as courses finish (each P4/P5 elective corpus is a candidate)",
+    "'Rooms of experts that interact' was the original sketch; /orchestrate covers most of it"
+  ],
+  gap:["Nothing blocking. Add consultants opportunistically; the recipe is documented in Consultant & Agent System.md"],
+  links:["ideas","rendering"],
+  sources:["_Setup/Consultant & Agent System.md",".claude/agents/_index.md"]
+},
+
+"rendering": {
+  name:"Output & Rendering", status:"live", meta:"6 skills · two engines sharing one design-token layer",
+  what:"How things leave the vault looking good: deterministic house-style documents (/render-det, vendored from Dad), eval-driven generative posters and decks (/render-gen, successor to /onepager), spec-first writing (/backengineer), browser-judged design loops (/evaluate), gated course sites (/course-page) and prompt-to-deployed-site (/vibecode, which built this page's repo).",
+  now:[
+    "render-det and onepager polished; render-gen draft (deck output unproven); evaluate/backengineer/vibecode working",
+    "Shared token layer (tokens_to_css.py) keeps the two engines visually consistent",
+    "Design systems documented for INSEAD and the AI Club"
+  ],
+  target:["render-gen replaces onepager once deck output is production-tested; otherwise this layer is in maintenance mode, as it should be"],
+  gap:["Production-test render-gen decks on a real deliverable, then retire /onepager to avoid drift between near-duplicates"],
+  links:["consultants"],
+  sources:["_Setup/Skills/render-det/","_Setup/Skills/render-gen/","~/projects/"]
+},
+
+"butler": {
+  name:"The Butler (Act layer)", status:"planned", meta:"Stage 4b · deliberately deferred",
+  what:"The end-game borrowed from Freddie's ticketing system: every workflow split into a safe preparatory tail the system does automatically (research, drafts, calendar checks, filing) and a short irreversible head that waits for one approval tap (send, book, pay). A dispatcher watches the queues and prepares everything; you become an approver, not an operator.",
+  now:[
+    "First slice already alive without the name: mail-triage drafts but never sends; /triage prepares the day; task-voice files without asking",
+    "The plan explicitly defers this lane until Surface (Stage 3) exists, and the audit agrees"
+  ],
+  target:[
+    "Daily urgency re-score across open tasks",
+    "Draft eval-loop: outbound drafts iterate against your voice before reaching you",
+    "Dispatcher + one-tap approvals (Freddie uses Telegram; your equivalent could be the digest-marks pattern mail-triage already uses)",
+    "Each capture system grows its own auto/approval split"
+  ],
+  gap:[
+    "Don't build the dispatcher yet. Extend the proven pattern instead: each new automation ships with 'prepare everything, queue the irreversible'",
+    "Revisit after Stage 3: the dispatcher needs the MOC/metadata layer to know what's going on"
+  ],
+  links:["mail","task-system","restructure"],
+  sources:["Content Library/Content/Freddie's Ticketing Explainer.md","Vault System - 06 (deferred lanes)"]
+},
+
+"infra": {
+  name:"Scripts, Jobs & Hooks", status:"live", meta:"14 launchd jobs · ~20 script folders · 2 hooks · weekly backup",
+  what:"The machinery: every scheduled job, its wrapper script, state files and logs, organised one folder per launchd label under ~/scripts/, rsynced weekly to OneDrive, with a dependency-audit convention before anything moves. See the Scripts & Jobs tab for the full verified table.",
+  now:[
+    "All 14 jobs verified loaded with recent log evidence; zero broken",
+    "Headless Claude pattern standardised: bash wrapper → claude -p /skill, gated, locked, watermarked",
+    "Two strays flagged: lecture_mover.sh in the home directory, and the content-scan plist never installed"
+  ],
+  target:[
+    "Every scheduled thing observable: each wrapper writes the log its plist promises",
+    "Strays retired; one pattern for everything",
+    "A weekly /update scheduler was sketched in the maintenance audit (still an open checkbox)"
+  ],
+  gap:[
+    "Install the content-scan plist; add briefing log redirection; retire lecture_mover.sh",
+    "Consider one shared wrapper template: five scripts re-implement the same gate/lock/marker logic with small drifts"
+  ],
+  links:["maintenance","mail","briefing"],
+  sources:["~/scripts/README.md","~/Library/LaunchAgents/","4. AI Learning/Workflow/14. Vault Maintenance Audit.md"]
+},
+
+"maintenance": {
+  name:"Vault Maintenance (/update)", status:"partial", meta:"deliberate holding pattern · last run 6 June",
+  what:"The vault's immune system: six passes (metadata lint, cross-ref propagation, lecture-source detection, wikilink integrity, meta drift, task-nav consistency) plus a staleness nudge every 2 hours. Currently running in lightweight mode by your own decision: the whole-vault metadata redo will rewrite the rules, so deep linting now would be wasted work.",
+  now:[
+    "Last full run 6 Jun: vault at 2,889 files (up from 1,083 in six weeks: the system is being used, hard)",
+    "Flagged honestly: 48 lecture placeholders, ~22 files missing frontmatter, stale meta docs (the vault-setup doc claims 15 people vs 147 real), type-value inflation",
+    "Cross-reference propagation deferred as too token-heavy with ~800 new notes"
+  ],
+  target:[
+    "Post-restructure: /update lints against the ratified schema, the Unfiled MOC does orphan detection structurally, and the meta docs regenerate instead of rotting"
+  ],
+  gap:[
+    "Keep the holding pattern until Stage 0; the backlog list in the 6 Jun log is the queue",
+    "The stale meta-docs problem partially dissolves when this site becomes the living map (update it as systems change)",
+    "Wire the weekly /update scheduler once the metadata redo lands"
+  ],
+  links:["restructure","infra","lectures"],
+  sources:["_Setup/Skills/update/","~/scripts/update-nudge/","Update Log.md"]
+}
+};
+
+function renderDetail(id){
+  const s = SYSTEMS[id]; if(!s) return;
+  const el = document.getElementById('detail');
+  el.innerHTML = `
+    <div class="dethead"><h2>${s.name}</h2>${P[s.status]}</div>
+    <div class="detmeta">${s.meta}</div>
+    <p style="max-width:820px">${s.what}</p>
+    <div class="twocol">
+      <div class="panel now"><h4>Where it is now (verified)</h4><ul>${s.now.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+      <div class="panel target"><h4>Where it's going</h4><ul>${s.target.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+    </div>
+    <div class="gapblock"><h4>How to get from A to B</h4><ol>${s.gap.map(x=>`<li>${x}</li>`).join('')}</ol></div>
+    <div class="chips"><span class="lk" style="font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em;margin-right:6px">Connected:</span>${s.links.map(l=>`<span class="chip" data-sys="${l}">${SYSTEMS[l]?SYSTEMS[l].name:l}</span>`).join('')}</div>
+    <div class="srcs">Sources: ${s.sources.map(x=>`<code>${x}</code>`).join(' · ')}</div>`;
+  bindSysLinks(el);
+}
+
+function show(view){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const el = document.getElementById('view-'+view); if(el) el.classList.add('active');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
+  window.scrollTo({top:0});
+}
+
+function openSys(id){
+  renderDetail(id);
+  show('system');
+  history.replaceState(null,'','#'+id);
+}
+
+function bindSysLinks(root){
+  root.querySelectorAll('[data-sys]').forEach(n=>n.addEventListener('click',()=>openSys(n.dataset.sys)));
+}
+
+document.querySelectorAll('nav [data-view], .crumb [data-view]').forEach(b=>
+  b.addEventListener('click',()=>{show(b.dataset.view); history.replaceState(null,'','#'+b.dataset.view);}));
+bindSysLinks(document);
+
+// skill filter
+const sf = document.getElementById('skillfilter');
+if(sf){ sf.querySelectorAll('.fbtn').forEach(b=>b.addEventListener('click',()=>{
+  sf.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+  const f=b.dataset.f;
+  document.querySelectorAll('#skilltable tr[data-g]').forEach(r=>r.style.display=(f==='all'||r.dataset.g===f)?'':'none');
+}));}
+
+// hash routing on load
+const h = location.hash.replace('#','');
+if(h && SYSTEMS[h]) openSys(h);
+else if(h && document.getElementById('view-'+h)) show(h);
+</script>
+
 </body>
 </html>
