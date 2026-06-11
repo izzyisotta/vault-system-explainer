@@ -96,8 +96,8 @@ ul{margin:8px 0;padding-left:20px} li{margin:5px 0}
 .srcs code{font-size:12px}
 
 /* mermaid diagrams */
-.mermaid{background:#10141b;border:1px solid var(--line);border-radius:12px;padding:16px 10px;margin:10px 0 18px;overflow-x:auto;text-align:center}
-.mermaid svg{max-width:100%;height:auto}
+.mermaid{background:#10141b;border:1px solid var(--line);border-radius:12px;padding:18px 14px;margin:10px 0 18px;overflow-x:auto}
+.mermaid svg{display:block;margin:0 auto}
 .dlegend{display:flex;gap:7px 14px;flex-wrap:wrap;align-items:center;margin:20px 0 8px;font-size:12px;color:var(--dim)}
 .dlegend .lt{text-transform:uppercase;letter-spacing:.04em;color:var(--faint);font-weight:600}
 .dlegend span.sw{display:inline-flex;align-items:center;gap:5px}
@@ -512,9 +512,9 @@ footer{padding:40px 0 70px;color:var(--faint);font-size:14px;border-top:1px soli
 mermaid.initialize({startOnLoad:false, securityLevel:'loose', theme:'base',
   themeVariables:{darkMode:true, background:'#0d1117', primaryColor:'#161b22', primaryTextColor:'#c9d1d9',
     primaryBorderColor:'#2a3340', lineColor:'#6e7681', secondaryColor:'#1c2330', tertiaryColor:'#11151c',
-    clusterBkg:'#0d1117', clusterBorder:'#2a3340', edgeLabelBackground:'#0d1117', fontSize:'13px',
+    clusterBkg:'#0d1117', clusterBorder:'#2a3340', edgeLabelBackground:'#0d1117', fontSize:'14px',
     fontFamily:'-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif'},
-  flowchart:{htmlLabels:true, curve:'basis', nodeSpacing:28, rankSpacing:42}});
+  flowchart:{useMaxWidth:false, htmlLabels:true, curve:'basis', nodeSpacing:34, rankSpacing:46, padding:8}});
 
 const P = {live:'<span class="pill live">Live</span>', partial:'<span class="pill partial">Partial</span>', planned:'<span class="pill planned">Planned</span>', down:'<span class="pill down">Broken</span>'};
 
@@ -914,7 +914,7 @@ const LEGEND = `<div class="dlegend"><span class="lt">How it works · key:</span
 
 const DIAGRAMS = {
 
-"task-system": `flowchart LR
+"task-system": `flowchart TD
   voice["Voice note<br>iCloud Task Voice Notes"]:::file
   jobTV["com.isabella.task-voice<br>every 10 min"]:::job
   sTV["task-voice-pipeline.sh<br>+ transcribe-task-note.py"]:::script
@@ -944,7 +944,7 @@ const DIAGRAMS = {
   iz -.-> p6
   bases -.-> disp`,
 
-"content-ingestion": `flowchart LR
+"content-ingestion": `flowchart TD
   phone(["iOS share sheet"]):::human
   inc["_Inbox/Content/incoming.md<br>legacy dropbox.md as fallback"]:::file
   drop["File drop<br>PDF · md · audio · video"]:::file
@@ -968,7 +968,7 @@ const DIAGRAMS = {
   enr --> conn --> note --> lp
   skP --> jrn`,
 
-"content-library": `flowchart LR
+"content-library": `flowchart TD
   skP["/process pipeline"]:::skill
   scan["content-scan/scan.py<br>monthly discovery, manual so far"]:::script
   brf["/briefing · /mail-triage"]:::skill
@@ -985,7 +985,7 @@ const DIAGRAMS = {
   cont --> lps --> hub
   lps -.-> moc`,
 
-"voice": `flowchart LR
+"voice": `flowchart TD
   subgraph lec["Lecture recordings"]
     icl["iCloud<br>Lecture Recordings"]:::file
     mover["~/lecture_mover.sh<br>stray, 30s poll, redundant"]:::broken
@@ -1012,7 +1012,7 @@ const DIAGRAMS = {
   rt -.-> src
   rt -.-> mn`,
 
-"mail": `flowchart LR
+"mail": `flowchart TD
   jobMT["com.isabella.mail-triage<br>30-min poll, AM + PM slots"]:::job
   wrap["mail-triage.sh<br>slot gates · lock · watermark"]:::script
   skMT["/mail-triage<br>Sonnet, scoped permissions:<br>send/reply/forward DENIED"]:::skill
@@ -1027,16 +1027,16 @@ const DIAGRAMS = {
   state["state/ watermark ·<br>processed-ids · slot markers"]:::file
   crmh["CRM hook: auto last_contact<br>on person notes"]:::plan
   jobMT --> wrap --> skMT
+  wrap --> state
   marks --> skMT
   skMT --> read --> cls
   lists --> cls
   cls --> mng
   cls --> drafts --> send
   cls --> digest --> marks
-  skMT --> state
-  skMT -.-> crmh`,
+  digest -.-> crmh`,
 
-"canvas": `flowchart LR
+"canvas": `flowchart TD
   jobCS["com.isabella.canvas-sync<br>daily 07:00"]:::job
   py["canvas-sync-playwright.py<br>--sync --assignments"]:::script
   pw["Playwright profile<br>INSEAD SSO session"]:::ext
@@ -1048,7 +1048,7 @@ const DIAGRAMS = {
   py --> st
   src --> trig`,
 
-"lectures": `flowchart LR
+"lectures": `flowchart TD
   canv["Canvas sync<br>slides + readings, daily 07:00"]:::job
   vp["Voice pipeline<br>transcripts, every 10 min"]:::job
   src["Sources/L##/"]:::file
@@ -1066,7 +1066,7 @@ const DIAGRAMS = {
   note --> cp --> site
   upd -.-> lnp`,
 
-"ideas": `flowchart LR
+"ideas": `flowchart TD
   cap["/idea · voice capture"]:::skill
   items["Items/ type: idea<br>15 active · 6 archived"]:::file
   base["Ideas.base"]:::file
@@ -1086,7 +1086,7 @@ const DIAGRAMS = {
   life -.-> moc
   life -.-> tlog`,
 
-"meetings": `flowchart LR
+"meetings": `flowchart TD
   ot["_Inbox/Other Transcripts/<br>5 waiting"]:::file
   mn["/meeting-notes<br>manual, on demand"]:::skill
   out["Structured meeting note<br>no fixed home yet"]:::file
@@ -1100,7 +1100,7 @@ const DIAGRAMS = {
   meta -.-> tsys
   meta -.-> mb`,
 
-"restructure": `flowchart LR
+"restructure": `flowchart TD
   s0(["Stage 0: ratify schema<br>3 decisions are Isabella's"]):::human
   spike["Spike ONE MOC<br>validate Bases syntax"]:::plan
   bf["Write + test backfill script<br>folder to areas/efforts/Up:"]:::plan
@@ -1114,7 +1114,7 @@ const DIAGRAMS = {
   mocs -.-> tmpl
   excl --- s0`,
 
-"briefing": `flowchart LR
+"briefing": `flowchart TD
   jobB["com.isabella.briefing<br>30-min poll, after 07:00, once a day"]:::job
   wrap["briefing-daily.sh<br>log redirect missing"]:::script
   skB["/briefing<br>Sonnet"]:::skill
@@ -1133,7 +1133,7 @@ const DIAGRAMS = {
   skB --> disc --> ddp --> sel --> cli --> note --> mail --> pn --> proc
   skB --> burls`,
 
-"crm": `flowchart LR
+"crm": `flowchart TD
   ep["/enrich-person<br>on demand"]:::skill
   sub["5 parallel scans: vault · CV book ·<br>web · LinkedIn · email 360 days"]:::skill
   ms["MS365 mail MCP<br>last_contact evidence"]:::ext
@@ -1154,7 +1154,7 @@ const DIAGRAMS = {
   pn -.-> fup
   pn -.-> prep`,
 
-"consultants": `flowchart LR
+"consultants": `flowchart TD
   q(["A question worth<br>multiple perspectives"]):::human
   disp["/consultant<br>dispatcher"]:::skill
   c5["5 consultants: lesswrong ·<br>ai-builder · ob · nego · gp"]:::skill
@@ -1168,7 +1168,7 @@ const DIAGRAMS = {
   orch --> syn
   pan --> syn`,
 
-"rendering": `flowchart LR
+"rendering": `flowchart TD
   yaml["YAML description"]:::file
   tok["tokens_to_css.py<br>shared design tokens"]:::script
   det["/render-det<br>deterministic house style"]:::skill
@@ -1187,7 +1187,7 @@ const DIAGRAMS = {
   vc --> site
   cpg --> site`,
 
-"butler": `flowchart LR
+"butler": `flowchart TD
   caps["Capture systems: mail ·<br>tasks · transcripts · calendar"]:::file
   slice["Already alive: mail-triage<br>drafts-never-sends · /triage prep"]:::skill
   tick["Ticket store<br>one per actionable thing"]:::plan
@@ -1201,7 +1201,7 @@ const DIAGRAMS = {
   dsp -.-> appr -.-> tap -.-> exec
   slice -. proven pattern .-> auto`,
 
-"infra": `flowchart LR
+"infra": `flowchart TD
   caf["caffeinate -imsu<br>Mac never sleeps"]:::job
   pl["14 launchd plists<br>~/Library/LaunchAgents"]:::job
   wrap["wrapper.sh pattern:<br>gate · lock · marker · log"]:::script
@@ -1219,7 +1219,7 @@ const DIAGRAMS = {
   dad --- pl
   stray -.- pl`,
 
-"maintenance": `flowchart LR
+"maintenance": `flowchart TD
   jobUN["com.isabella.update-nudge<br>every 2 hours"]:::job
   ntf["macOS notification<br>if Update Log over 3 days stale"]:::script
   iz(["Isabella runs /update"]):::human
